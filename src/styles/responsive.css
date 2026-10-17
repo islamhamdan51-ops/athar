@@ -57,12 +57,22 @@
     opacity: 1;
   }
 
+  .nav-links.mobile-open .mobile-only-item {
+    display: block !important;
+  }
+
+  .nav-links.mobile-open .mobile-only-item.mobile-drawer-partners {
+    display: flex !important;
+  }
+
   .nav-link-btn {
     width: 100%;
+    min-height: 48px;
     justify-content: flex-start;
     padding: 12px 16px;
     font-size: 1rem;
     border-radius: var(--radius-md);
+    box-sizing: border-box;
   }
 
   .player-inner {
@@ -91,7 +101,7 @@
     padding-right: 16px;
   }
 
-  /* Header on Mobile — الحفاظ على سطر الشعار والسلوجان بتناسق تام دون كسر الارتفاع */
+  /* Header on Mobile — الحفاظ على سطر الشعار والسلوجان وتناسق أزرار الترويسة */
   .brand-wrapper {
     gap: 10px;
   }
@@ -119,6 +129,17 @@
     max-width: 190px;
   }
 
+  .header-actions {
+    gap: 10px;
+  }
+
+  .theme-toggle-btn,
+  .mobile-menu-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-sm);
+  }
+
   /* Mobile Partner Links inside Drawer */
   .mobile-drawer-partners {
     display: flex;
@@ -133,13 +154,15 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 14px;
+    padding: 12px 16px;
+    min-height: 48px;
     background: var(--bg-btn-secondary);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
     color: var(--text-main);
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     font-weight: 600;
+    box-sizing: border-box;
   }
 
   /* Hero Section on Mobile */
@@ -170,6 +193,9 @@
     min-height: 48px;
     font-size: 0.95rem;
     justify-content: center;
+    border-radius: var(--radius-full);
+    box-sizing: border-box;
+    text-align: center;
   }
 
   /* Featured Album Card on Mobile */
@@ -192,7 +218,101 @@
 
   .hero-featured-info .btn-primary {
     width: 100%;
+    min-height: 48px;
     justify-content: center;
+    border-radius: var(--radius-full);
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 0.95rem;
+  }
+
+  /* Section Header on Mobile */
+  .section-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .section-header .btn-secondary {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+    border-radius: var(--radius-full);
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  /* Album Header Card Action Buttons on Mobile */
+  .album-action-buttons {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .album-action-buttons .btn-primary,
+  .album-action-buttons .btn-secondary {
+    width: 100%;
+    min-height: 48px;
+    font-size: 0.95rem;
+    justify-content: center;
+    border-radius: var(--radius-full);
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  /* Institutional Partnership Section on Mobile */
+  .partnership-spotlight-card {
+    grid-template-columns: 1fr !important;
+    padding: 24px 18px !important;
+    gap: 24px !important;
+  }
+
+  .partnership-cta-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .partnership-cta-buttons .btn-primary,
+  .partnership-cta-buttons .btn-secondary {
+    width: 100%;
+    min-height: 48px;
+    justify-content: center;
+    border-radius: var(--radius-full);
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 0.95rem;
+  }
+
+  /* Filter Tabs in Gallery on Mobile */
+  .filter-tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 8px;
+    padding: 4px 2px 10px;
+    margin-bottom: 24px;
+    scrollbar-width: none;
+  }
+
+  .filter-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-tab-btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 18px;
+    font-size: 0.88rem;
+    box-sizing: border-box;
   }
 
   /* Stats Ribbon on Mobile */
@@ -222,8 +342,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 10px;
-    gap: 8px;
+    padding: 0 12px;
+    gap: 10px;
     height: 100%;
   }
 
@@ -236,12 +356,12 @@
   .player-track-cover {
     width: 44px;
     height: 44px;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     flex-shrink: 0;
   }
 
   .player-track-title {
-    font-size: 0.88rem;
+    font-size: 0.9rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -249,23 +369,26 @@
   }
 
   .player-track-album {
-    font-size: 0.72rem;
+    font-size: 0.74rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     display: block;
     line-height: 1.2;
+    color: var(--text-muted);
   }
 
   .player-center-controls {
     flex-shrink: 0;
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
   }
 
   .player-buttons-row {
-    gap: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
   .player-time-row {
@@ -277,13 +400,15 @@
   }
 
   .ctrl-btn {
-    width: 34px;
-    height: 34px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
   }
 
   .ctrl-btn-play {
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
   }
 
   .player-right-tools {
@@ -299,20 +424,32 @@
   }
 
   .player-right-tools #playerPhotoSlideBtn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    padding: 0;
     display: inline-flex;
-    padding: 6px 10px;
-    font-size: 0.74rem;
-    gap: 4px;
-    border-radius: var(--radius-full);
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
   }
 
   .player-right-tools #playerPhotoSlideBtn .btn-text {
     display: none;
   }
 
+  .player-right-tools #playerPhotoSlideBtn .badge-pulse {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 7px;
+    height: 7px;
+  }
+
   /* Track Cards on Mobile */
   .track-card {
-    padding: 12px 14px;
+    padding: 14px 16px;
     flex-direction: column;
     align-items: stretch;
     gap: 12px;
@@ -326,8 +463,9 @@
   }
 
   .track-play-trigger {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
   }
 
   .track-meta-title {
@@ -345,9 +483,21 @@
     width: 100%;
     padding-top: 10px;
     border-top: 1px solid var(--border-subtle);
-    gap: 8px;
-    flex-wrap: wrap;
+    gap: 10px;
   }
+
+  .btn-track-visual {
+    min-height: 38px;
+    padding: 6px 14px;
+    font-size: 0.82rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: var(--radius-full);
+    box-sizing: border-box;
+    flex-shrink: 0;
+  }
+
 
   /* Gallery Grid on Mobile (2 columns) */
   .gallery-grid {

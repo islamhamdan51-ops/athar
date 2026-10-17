@@ -263,14 +263,20 @@ class AtharApp {
       });
     });
 
-    // Visual button triggers on individual tracks
+    // Visual button triggers on individual tracks (video or photo theater)
     const visualTriggers = document.querySelectorAll('.btn-track-visual');
     visualTriggers.forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const trackIdx = parseInt(btn.getAttribute('data-track-index'), 10);
-        this.player.loadTrack(trackIdx, false);
-        this.player.openVideoModal();
+        const track = this.tracks[trackIdx];
+        if (track && track.videoSrc) {
+          this.player.loadTrack(trackIdx, false);
+          this.player.openVideoModal();
+        } else {
+          this.player.loadTrack(trackIdx, true);
+          this.player.openPhotoTheater();
+        }
       });
     });
   }
@@ -406,10 +412,14 @@ class AtharApp {
                 <span class="track-duration-pill">${track.duration}</span>
 
                 ${track.videoSrc ? `
-                  <button class="btn-icon btn-track-visual" data-track-index="${idx}" title="مشاهدة العرض المرئي">
+                  <button class="btn-icon btn-track-visual" data-track-index="${idx}" title="مشاهدة العرض المرئي للنشيد">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="15" x="2" y="4" rx="2"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
                   </button>
-                ` : ''}
+                ` : `
+                  <button class="btn-icon btn-track-visual" data-track-index="${idx}" title="عرض صور الميدان المصاحبة للنشيد">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                  </button>
+                `}
               </div>
             </div>
           `).join('')}
@@ -436,7 +446,7 @@ class AtharApp {
 
       <!-- Institutional Partnership Spotlight -->
       <section class="container" style="margin-top: 80px;">
-        <div class="glass-panel" style="padding: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;">
+        <div class="glass-panel partnership-spotlight-card">
           <div>
             <span class="badge badge-lime" style="margin-bottom: 12px;">تكامل الرؤية والأثر</span>
             <h2 style="font-size: 1.8rem; margin-bottom: 16px;">رِحلة وغرسة: شريكان في بناء الإنسان والبيئة</h2>
@@ -445,12 +455,12 @@ class AtharApp {
               بينما ينطلق مشروع غرسة كمبادرة وطنية تحمي البيئة من التصحر وتغرس قيم العمل التطوعي لدى أجيال المدارس. 
               منصة «أَثَر» هي الوعاء الرقمي المشترك لتوثيق صوتهم وذاكرتهم.
             </p>
-            <div style="display: flex; gap: 14px; flex-wrap: wrap;">
-              <a href="https://gharsa.ly" target="_blank" rel="noopener noreferrer" class="btn-primary" style="padding: 10px 20px;">
+            <div class="partnership-cta-buttons">
+              <a href="https://gharsa.ly" target="_blank" rel="noopener noreferrer" class="btn-primary">
                 <span>زيارة موقع غرسة</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
               </a>
-              <a href="https://rehlaa.org" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="padding: 10px 20px;">
+              <a href="https://rehlaa.org" target="_blank" rel="noopener noreferrer" class="btn-secondary">
                 <span>زيارة موقع رِحلة</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
               </a>
@@ -523,7 +533,7 @@ class AtharApp {
               ${GHARSA_ALBUM.description}
             </p>
 
-            <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+            <div class="album-action-buttons">
               <button class="btn-primary" onclick="window.app.player.loadTrack(0, true)">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
                 <span>تشغيل الألبوم كاملاً</span>
@@ -584,12 +594,12 @@ class AtharApp {
                 </div>
 
                 ${track.videoSrc ? `
-                  <button class="btn-secondary btn-track-visual" data-track-index="${idx}" style="padding: 6px 14px; font-size: 0.8rem;" title="مشاهدة الفيديو المرئي للنشيد">
+                  <button class="btn-secondary btn-track-visual" data-track-index="${idx}" title="مشاهدة الفيديو المرئي للنشيد">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="15" x="2" y="4" rx="2"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
                     <span>عرض مرئي</span>
                   </button>
                 ` : `
-                  <button class="btn-secondary btn-track-visual" data-track-index="${idx}" style="padding: 6px 14px; font-size: 0.8rem;" title="عرض صور الميدان التلقائية مع النشيد">
+                  <button class="btn-secondary btn-track-visual" data-track-index="${idx}" title="عرض صور الميدان التلقائية مع النشيد">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
                     <span>عرض الصور</span>
                   </button>
