@@ -79,7 +79,7 @@ export class AtharAudioPlayer {
     });
   }
 
-  loadTrack(index, autoPlay = true) {
+  loadTrack(index, autoPlay = true, showVisuals = true) {
     if (index < 0 || index >= this.tracks.length) return;
     this.currentTrackIndex = index;
     const track = this.currentTrack;
@@ -94,12 +94,20 @@ export class AtharAudioPlayer {
       this.audio.play().catch(err => {
         console.log('Autoplay prevented by browser, waiting for user click:', err);
       });
+      if (showVisuals) {
+        this.openPhotoTheater();
+      } else {
+        const modal = document.getElementById('photoTheaterModal');
+        if (modal && modal.classList.contains('active')) {
+          this.updatePhotoTheaterUI();
+        }
+      }
     }
   }
 
   togglePlay() {
     if (!this.audio.src || this.audio.src === '') {
-      this.loadTrack(this.currentTrackIndex, true);
+      this.loadTrack(this.currentTrackIndex, true, true);
       return;
     }
 
@@ -107,6 +115,7 @@ export class AtharAudioPlayer {
       this.audio.pause();
     } else {
       this.audio.play().catch(err => console.log('Play error:', err));
+      this.openPhotoTheater();
     }
   }
 
@@ -120,7 +129,9 @@ export class AtharAudioPlayer {
     } else {
       nextIndex = (this.currentTrackIndex + 1) % this.tracks.length;
     }
-    this.loadTrack(nextIndex, true);
+    const modal = document.getElementById('photoTheaterModal');
+    const isTheaterOpen = modal && modal.classList.contains('active');
+    this.loadTrack(nextIndex, true, isTheaterOpen);
   }
 
   prev() {
@@ -130,7 +141,9 @@ export class AtharAudioPlayer {
       return;
     }
     const prevIndex = (this.currentTrackIndex - 1 + this.tracks.length) % this.tracks.length;
-    this.loadTrack(prevIndex, true);
+    const modal = document.getElementById('photoTheaterModal');
+    const isTheaterOpen = modal && modal.classList.contains('active');
+    this.loadTrack(prevIndex, true, isTheaterOpen);
   }
 
   seek(percentage) {

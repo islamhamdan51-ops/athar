@@ -224,7 +224,7 @@ class AtharApp {
         heroImg.style.opacity = '1';
       }, 180);
       if (heroText) {
-        heroText.textContent = `صورة ${index + 1}/33: ${photo.title}`;
+        heroText.textContent = `صورة ${index + 1}: ${photo.title}`;
       }
     }
   }
@@ -260,9 +260,14 @@ class AtharApp {
       card.addEventListener('click', () => {
         const trackIdx = parseInt(card.getAttribute('data-track-index'), 10);
         if (this.player.currentTrackIndex === trackIdx && this.player.isPlaying) {
-          this.player.audio.pause();
+          const modal = document.getElementById('photoTheaterModal');
+          if (modal && !modal.classList.contains('active')) {
+            this.player.openPhotoTheater();
+          } else {
+            this.player.audio.pause();
+          }
         } else {
-          this.player.loadTrack(trackIdx, true);
+          this.player.loadTrack(trackIdx, true, true);
         }
       });
     });
@@ -275,11 +280,10 @@ class AtharApp {
         const trackIdx = parseInt(btn.getAttribute('data-track-index'), 10);
         const track = this.tracks[trackIdx];
         if (track && track.videoSrc) {
-          this.player.loadTrack(trackIdx, false);
+          this.player.loadTrack(trackIdx, false, false);
           this.player.openVideoModal();
         } else {
-          this.player.loadTrack(trackIdx, true);
-          this.player.openPhotoTheater();
+          this.player.loadTrack(trackIdx, true, true);
         }
       });
     });
@@ -326,7 +330,7 @@ class AtharApp {
               
               <button class="btn-secondary" onclick="window.app.player.openPhotoTheater()">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-                <span>عرض الصور مع النشيد (33 صورة)</span>
+                <span>عرض الصور مع النشيد</span>
               </button>
             </div>
           </div>
@@ -344,7 +348,7 @@ class AtharApp {
               <div>
                 <span class="badge badge-sand" style="margin-bottom:6px;">ألبوم غرسة الإنشادي</span>
                 <h3 style="font-size:1.3rem; margin-bottom:4px;">${GHARSA_ALBUM.title}</h3>
-                <p style="font-size:0.85rem; color:var(--text-muted);">4 مسارات رئيسية + 2 مسار استوديو • 33 صورة ميدانية</p>
+                <p style="font-size:0.85rem; color:var(--text-muted);">4 مسارات رئيسية + 2 مسار استوديو • صور ميدانية موثقة</p>
               </div>
               <button class="btn-primary" style="padding:10px 18px;" onclick="event.stopPropagation(); window.app.player.openPhotoTheater()">
                 <span>عرض مسرح الصور</span>
@@ -438,7 +442,7 @@ class AtharApp {
             <h2 class="section-main-title" id="memoryTeaserTitle">لحظات من قلب الميدان والمدارس</h2>
           </div>
           <button class="btn-secondary" onclick="window.app.navigateTo('gallery')">
-            <span>تصفح كامل المعرض (33 صورة)</span>
+            <span>تصفح كامل المعرض</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
           </button>
         </div>
@@ -638,7 +642,7 @@ class AtharApp {
 
         <!-- Category Filters -->
         <div class="filter-tabs" id="galleryFilterTabs">
-          <button class="filter-tab-btn active" data-filter="all">كافة الصور (33)</button>
+          <button class="filter-tab-btn active" data-filter="all">كافة الصور</button>
           <button class="filter-tab-btn" data-filter="planting">غرس الشتلات</button>
           <button class="filter-tab-btn" data-filter="schools">حملات المدارس</button>
           <button class="filter-tab-btn" data-filter="volunteers">روح التطوع</button>
@@ -819,7 +823,7 @@ class AtharApp {
               <ul class="footer-links-list">
                 <li><a href="#home" onclick="event.preventDefault(); window.app.navigateTo('home')">الرئيسية</a></li>
                 <li><a href="#gharsa" onclick="event.preventDefault(); window.app.navigateTo('gharsa')">ألبوم غرسة الأول</a></li>
-                <li><a href="#gallery" onclick="event.preventDefault(); window.app.navigateTo('gallery')">ذاكرة غرسة (33 صورة)</a></li>
+                <li><a href="#gallery" onclick="event.preventDefault(); window.app.navigateTo('gallery')">ذاكرة غرسة</a></li>
                 <li><a href="#rehla" onclick="event.preventDefault(); window.app.navigateTo('rehla')">ألبوم رِحلة (قريباً)</a></li>
                 <li><a href="#about" onclick="event.preventDefault(); window.app.navigateTo('about')">عن المنصة</a></li>
               </ul>
