@@ -1,0 +1,14 @@
+{
+  "name": "athar-platform",
+  "version": "1.0.0",
+  "description": "أَثَر | ATHAR - المنصة الرقمية للأناشيد والذاكرة البصرية لمنظمة رِحلة ومشروع غرسة",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  }
+}

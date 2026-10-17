@@ -1,0 +1,66 @@
+/* ==========================================================================
+   Design Tokens & Variables — أَثَر | ATHAR
+   هوية مستوحاة من تناغم غرسة (الأرض والشتلات) ورِحلة (الإنسان والأثر)
+   ========================================================================== */
+
+:root {
+  /* خلفيات داكنة فاخرة بطابع نباتي ليلي */
+  --bg-deep: #06110c;
+  --bg-surface: #0c1e15;
+  --bg-surface-elevated: #122b1f;
+  --bg-card: rgba(12, 30, 21, 0.7);
+  --bg-card-hover: rgba(18, 43, 31, 0.85);
+  --bg-glass: rgba(10, 25, 18, 0.82);
+  --bg-glass-heavy: rgba(6, 17, 12, 0.92);
+
+  /* لوحة الألوان المعتمدة */
+  --brand-emerald: #10b981;     /* أخضر زمردي حيوي للإجراءات الأساسية */
+  --brand-emerald-glow: rgba(16, 185, 129, 0.28);
+  --brand-lime: #82b939;        /* أخضر رِحلة الرسمي */
+  --brand-forest: #1e4d2b;      /* أخضر غابة عميق */
+  --brand-sand: #d4a373;        /* لون ترابي دافئ يحاكي أديم الأرض */
+  --brand-sand-subtle: rgba(212, 163, 115, 0.15);
+  --brand-amber: #f59e0b;       /* لمسة ذهبية للمؤشرات الخاصة */
+
+  /* ألوان النصوص والتباين العالي (WCAG AAA) */
+  --text-main: #f8fafc;
+  --text-body: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-subtle: #64748b;
+  --text-brand: #34d399;
+
+  /* الحدود والزجاج */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.16);
+  --border-focus: #10b981;
+  --border-emerald-glow: rgba(16, 185, 129, 0.4);
+
+  /* الظلال */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 30px rgba(16, 185, 129, 0.22);
+  --shadow-glow-lime: 0 0 25px rgba(130, 185, 57, 0.2);
+
+  /* زوايا التدوير */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-full: 9999px;
+
+  /* الانتقالات */
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* الخطوط ومقاساتها */
+  --font-arabic: 'Cairo', 'Tajawal', system-ui, -apple-system, sans-serif;
+  --font-display: 'Cairo', sans-serif;
+
+  /* أبعاد الهيكل الرئيسي */
+  --header-height: 76px;
+  --player-height: 88px;
+  --max-width: 1280px;
+}

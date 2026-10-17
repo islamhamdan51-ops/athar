@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>أَثَر | ATHAR — المنصة الرقمية للأناشيد والذاكرة البصرية</title>
+  
+  <!-- SEO & Meta Tags -->
+  <meta name="description" content="أَثَر: المنصة الرقمية للأناشيد والذاكرة البصرية التوثيقية لمنظمة رِحلة ومشروع غرسة. ألبوم غرسة الإنشادي ومعرض صور المتطوعين والأنشطة الميدانية في ليبيا." />
+  <meta name="keywords" content="أثر, رحلة, غرسة, أناشيد غرسة, تطوع ليبيا, تشجير ليبيا, ذاكرة بصرية" />
+  <meta name="author" content="منظمة رِحلة للتنمية المستدامة & مشروع غرسة" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="أَثَر | ATHAR — لكل أثر حكاية، ولكل حكاية صوت" />
+  <meta property="og:description" content="استمع إلى ألبوم أناشيد غرسة وتصفح ذاكرة العمل التطوعي والميداني لمنظمة رِحلة ومشروع غرسة." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/media/brand/gharsa-banner.png" />
+  <meta property="og:locale" content="ar_LY" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2310b981'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z'/></svg>" />
+
+  <!-- Google Fonts: Cairo & Tajawal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="/src/styles/variables.css" />
+  <link rel="stylesheet" href="/src/styles/base.css" />
+  <link rel="stylesheet" href="/src/styles/components.css" />
+  <link rel="stylesheet" href="/src/styles/player.css" />
+  <link rel="stylesheet" href="/src/styles/gallery.css" />
+  <link rel="stylesheet" href="/src/styles/responsive.css" />
+</head>
+<body>
+
+  <!-- Top Sticky Header -->
+  <header class="site-header" role="banner">
+    <div class="container header-container">
+      
+      <!-- Brand Logo & Tagline -->
+      <div class="brand-wrapper" id="brandNavHome" role="button" tabindex="0" aria-label="أَثَر — العودة إلى الصفحة الرئيسية">
+        <div class="brand-logo-mark">
+          <!-- Stylized Seedling & Soundwave Icon -->
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" opacity="0.3"/>
+            <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>
+            <path d="M9 13a3 3 0 0 0 6 0"/>
+          </svg>
+        </div>
+        <div class="brand-text-block">
+          <div class="brand-title">
+            <span>أَثَر</span>
+            <span class="en">ATHAR</span>
+          </div>
+          <span class="brand-tagline">لكل أثر حكاية، ولكل حكاية صوت</span>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="main-nav" role="navigation" aria-label="القائمة الرئيسية">
+        <ul class="nav-links" id="mainNavLinks">
+          <li>
+            <button class="nav-link-btn active" data-view="home" aria-current="page">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              الرئيسية
+            </button>
+          </li>
+          <li>
+            <button class="nav-link-btn" data-view="gharsa">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a9 9 0 0 0-9 9c0 4 3 7 7 8v3h4v-3c4-1 7-4 7-8a9 9 0 0 0-9-9z"/><path d="M12 6v6l4 2"/></svg>
+              ألبوم غرسة
+            </button>
+          </li>
+          <li>
+            <button class="nav-link-btn" data-view="gallery">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+              ذاكرة غرسة
+            </button>
+          </li>
+          <li>
+            <button class="nav-link-btn" data-view="rehla">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+              ألبوم رِحلة
+            </button>
+          </li>
+          <li>
+            <button class="nav-link-btn" data-view="about">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              عن المنصة
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- External Partner Links & Mobile Hamburger -->
+      <div class="header-actions">
+        <a href="https://gharsa.ly" target="_blank" rel="noopener noreferrer" class="partner-pill-link" title="الموقع الرسمي لمشروع غرسة">
+          <span class="badge badge-emerald">غرسة</span>
+          <span>gharsa.ly</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+
+        <a href="https://rehlaa.org" target="_blank" rel="noopener noreferrer" class="partner-pill-link" title="الموقع الرسمي لمنظمة رِحلة للتنمية المستدامة">
+          <span class="badge badge-lime">رِحلة</span>
+          <span>rehlaa.org</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+
+        <button class="mobile-menu-btn" id="mobileMenuToggle" aria-label="فتح القائمة">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Error notification bar if any audio file has issue -->
+  <div id="playerErrorNotice" style="display:none; position:fixed; top:80px; left:50%; transform:translateX(-50%); background:#e11d48; color:#fff; padding:10px 20px; border-radius:30px; z-index:999; box-shadow:0 10px 25px rgba(0,0,0,0.5); font-size:0.9rem;"></div>
+
+  <!-- Dynamic Views Container (SPA) -->
+  <main id="appContent" role="main">
+    <!-- Rendered dynamically by main.js -->
+  </main>
+
+  <!-- Persistent Bottom Audio Player -->
+  <aside class="bottom-player" role="region" aria-label="مشغل الصوت المستمر">
+    <!-- Clickable Top Thin Seeker -->
+    <div class="player-top-progress-container" id="playerTopProgressContainer" role="slider" aria-label="شريط تقدم النشيد" tabindex="0">
+      <div class="player-top-progress-bar" id="playerTopProgressBar">
+        <div class="player-top-progress-thumb"></div>
+      </div>
+    </div>
+
+    <div class="container player-inner">
+      
+      <!-- Track Meta (Left) -->
+      <div class="player-track-info">
+        <img 
+          src="/media/brand/gharsa-banner.png" 
+          alt="غلاف الألبوم" 
+          class="player-track-cover" 
+          id="playerVinylCover" 
+        />
+        <div class="player-track-meta">
+          <span class="player-track-title" id="playerTrackTitle">عناق الجذور</span>
+          <span class="player-track-album" id="playerTrackAlbum">ألبوم غرسة — الموسم الأول</span>
+        </div>
+      </div>
+
+      <!-- Center Player Controls -->
+      <div class="player-center-controls">
+        <div class="player-buttons-row">
+          <button class="ctrl-btn extra-ctrl" id="playerShuffleBtn" title="تشغيل عشوائي" aria-label="تشغيل عشوائي">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>
+          </button>
+
+          <button class="ctrl-btn" id="playerPrevBtn" title="النشيد السابق" aria-label="النشيد السابق">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+          </button>
+
+          <button class="ctrl-btn ctrl-btn-play" id="playerPlayBtn" title="تشغيل / إيقاف" aria-label="تشغيل">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+
+          <button class="ctrl-btn" id="playerNextBtn" title="النشيد التالي" aria-label="النشيد التالي">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+          </button>
+
+          <button class="ctrl-btn extra-ctrl" id="playerLoopBtn" title="تكرار" aria-label="تكرار">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+          </button>
+        </div>
+
+        <div class="player-time-row">
+          <span class="time-text" id="playerCurrentTime">00:00</span>
+          <div class="time-slider-track" id="playerTimeTrack">
+            <div class="time-slider-fill" id="playerProgressFill"></div>
+          </div>
+          <span class="time-text" id="playerDurationTime">02:26</span>
+        </div>
+      </div>
+
+      <!-- Right Utility Controls -->
+      <div class="player-right-tools">
+        <button class="btn-secondary" id="playerVisualBtn" style="padding: 6px 14px; font-size: 0.82rem;" title="مشاهدة العرض المرئي للنشيد">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="15" x="2" y="4" rx="2"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+          <span>عرض مرئي</span>
+        </button>
+
+        <div class="volume-wrapper">
+          <button class="ctrl-btn" id="playerMuteBtn" title="كتم / تشغيل الصوت" aria-label="التحكم في الصوت">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          </button>
+          <input type="range" class="volume-slider" id="playerVolumeSlider" min="0" max="100" value="85" aria-label="مستوى الصوت" />
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+  <!-- Video Preview Modal (for watching MP4 visual while audio plays) -->
+  <div class="video-preview-modal" id="videoPreviewModal" role="dialog" aria-modal="true" aria-labelledby="modalVideoTitle">
+    <div class="video-modal-card">
+      <div class="video-modal-header">
+        <h3 id="modalVideoTitle" style="font-size:1.1rem; color:var(--text-main);">العرض المرئي للنشيد</h3>
+        <button class="btn-icon" id="videoModalCloseBtn" aria-label="إغلاق العرض المرئي">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="video-modal-body">
+        <video id="modalVideoPlayer" controls playsinline></video>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full-Screen Lightbox Modal for 33 Field Photos -->
+  <div class="lightbox-modal" id="lightboxModal" role="dialog" aria-modal="true" aria-label="معاينة الصورة المكبرة">
+    <div class="lightbox-header">
+      <span class="lightbox-counter" id="lightboxCounter">1 / 33</span>
+      <button class="lightbox-close-btn" id="lightboxCloseBtn" aria-label="إغلاق العرض المكبر (Escape)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Navigation Arrows -->
+    <button class="lightbox-nav-btn prev" id="lightboxPrevBtn" aria-label="الصورة السابقة (سهم يمين)">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+
+    <div class="lightbox-content">
+      <div class="lightbox-image-frame">
+        <img src="" alt="" class="lightbox-main-img" id="lightboxMainImg" />
+      </div>
+      <div class="lightbox-caption-bar">
+        <h3 class="lightbox-caption-title" id="lightboxTitle"></h3>
+        <span class="lightbox-caption-category" id="lightboxCategory"></span>
+      </div>
+    </div>
+
+    <button class="lightbox-nav-btn next" id="lightboxNextBtn" aria-label="الصورة التالية (سهم يسار)">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+  </div>
+
+  <!-- Application Entrypoint -->
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
