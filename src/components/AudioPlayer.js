@@ -21,6 +21,7 @@ export class AtharAudioPlayer {
     this.isMuted = false;
     this.isLooping = false;
     this.isShuffled = false;
+    this.playbackRate = 1.0;
     this.volume = 0.85;
     this.onTrackChange = onTrackChange || (() => {});
 
@@ -79,13 +80,14 @@ export class AtharAudioPlayer {
     });
   }
 
-  loadTrack(index, autoPlay = true, showVisuals = true) {
+  loadTrack(index, autoPlay = true, showVisuals = false) {
     if (index < 0 || index >= this.tracks.length) return;
     this.currentTrackIndex = index;
     const track = this.currentTrack;
 
     this.audio.src = track.audioSrc;
     this.audio.currentTime = 0;
+    this.audio.playbackRate = this.playbackRate || 1.0;
 
     this.onTrackChange(track, index);
     this.updateTrackMetaUI();
@@ -107,7 +109,7 @@ export class AtharAudioPlayer {
 
   togglePlay() {
     if (!this.audio.src || this.audio.src === '') {
-      this.loadTrack(this.currentTrackIndex, true, true);
+      this.loadTrack(this.currentTrackIndex, true, false);
       return;
     }
 
@@ -115,7 +117,6 @@ export class AtharAudioPlayer {
       this.audio.pause();
     } else {
       this.audio.play().catch(err => console.log('Play error:', err));
-      this.openPhotoTheater();
     }
   }
 
@@ -354,7 +355,10 @@ export class AtharAudioPlayer {
     window.addEventListener('keydown', (e) => {
       const modal = document.getElementById('photoTheaterModal');
       if (modal && modal.classList.contains('active')) {
-        if (e.key === 'Escape') this.closePhotoTheater();
+        if (e.key === 'Escape') {
+          this.closePhotoTheater();
+          this.closeLyricsModal();
+        }
         if (e.key === 'ArrowRight') this.prevPhoto();
         if (e.key === 'ArrowLeft') this.nextPhoto();
         if (e.key === ' ') {
@@ -473,5 +477,65 @@ export class AtharAudioPlayer {
     if (title) title.textContent = photo.title;
     if (cat) cat.textContent = photo.category;
     if (trackInd) trackInd.textContent = `النشيد: ${this.currentTrack.title}`;
+  }
+
+  /* ========================================================================
+     Lyrics Memorization System (قارئ الكلمات للمتطوعين للحفظ والمتابعة)
+     ======================================================================== */
+  openLyricsModal(trackIndex = null) {
+    const idx = trackIndex !== null ? trackIndex : this.currentTrackIndex;
+    const track = this.tracks[idx];
+    if (!track) return;
+
+    const modal = document.getElementById('lyricsReaderModal');
+    const title = document.getElementById('lyricsModalTitle');
+    const subtitle = document.getElementById('lyricsModalSubtitle');
+    const content = document.getElementById('lyricsModalContent');
+    const downloadBtn = document.getElementById('lyricsModalDownloadBtn');
+    const playBtnText = document.getElementById('lyricsModalPlayText');
+
+    if (title) title.textContent = track.title;
+    if (subtitle) subtitle.textContent = `${track.theme} • المدة: ${track.duration}`;
+    if (downloadBtn) {
+      downloadBtn.href = track.audioSrc;
+      downloadBtn.download = `${track.title}.mp4`;
+    }
+    if (playBtnText) {
+      playBtnText.textContent = (this.currentTrackIndex === idx && this.isPlaying) ? 'إيقاف مؤقت' : 'تشغيل النشيد';
+    }
+
+    if (content) {
+      const text = track.lyrics || track.lyricsPreview || '';
+      const stanzas = text.split('\n\n');
+      content.innerHTML = stanzas.map(stanza => `
+        <div class="lyrics-stanza">
+          ${stanza.split('\n').map(l => `<p class="lyrics-line">${l.trim()}</p>`).join('')}
+        </div>
+      `).join('');
+    }
+
+    if (modal) modal.classList.add('active');
+  }
+
+  closeLyricsModal() {
+    const modal = document.getElementById('lyricsReaderModal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  setPlaybackRate(rate) {
+    this.playbackRate = rate;
+    this.audio.playbackRate = rate;
+    const btns = document.querySelectorAll('.player-speed-indicator, #lyricsModalSpeedBtn, #playerSpeedBtn');
+    btns.forEach(b => {
+      b.textContent = `السرعة: ${rate}x`;
+    });
+  }
+
+  cyclePlaybackRate() {
+    const rates = [1.0, 0.8, 1.2];
+    const curIdx = rates.indexOf(this.playbackRate || 1.0);
+    const nextRate = rates[(curIdx + 1) % rates.length];
+    this.setPlaybackRate(nextRate);
+    return nextRate;
   }
 }

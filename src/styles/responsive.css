@@ -483,23 +483,44 @@
   .track-card-right {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
+    flex-wrap: wrap;
     width: 100%;
     padding-top: 10px;
     border-top: 1px solid var(--border-subtle);
-    gap: 10px;
+    gap: 8px;
   }
 
+  .btn-track-lyrics,
+  .btn-track-download,
   .btn-track-visual {
     min-height: 38px;
-    padding: 6px 14px;
+    padding: 6px 12px;
     font-size: 0.82rem;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     border-radius: var(--radius-full);
     box-sizing: border-box;
     flex-shrink: 0;
+  }
+
+  .lyrics-reader-modal {
+    padding: 12px;
+  }
+
+  .lyrics-reader-container {
+    max-height: 92vh;
+  }
+
+  .lyrics-memorize-toolbar {
+    padding: 10px 14px;
+    gap: 6px;
+  }
+
+  .lyrics-line {
+    font-size: 1.05rem;
+    line-height: 2;
   }
 
 

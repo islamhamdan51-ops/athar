@@ -13,6 +13,7 @@ import { AtharPWAController } from './components/PWAController.js';
 class AtharApp {
   constructor() {
     this.currentView = 'home';
+    this.currentLyricsTrackIndex = 0;
     this.tracks = GHARSA_ALBUM.tracks;
     this.galleryItems = GALLERY_ITEMS;
 
@@ -166,6 +167,81 @@ class AtharApp {
       videoModalClose.addEventListener('click', () => this.player.closeVideoModal());
     }
 
+    // Direct Lyrics Reader and Speed Controls in Player Bar
+    const lyricsBtn = document.getElementById('playerLyricsBtn');
+    if (lyricsBtn) {
+      lyricsBtn.addEventListener('click', () => {
+        this.player.openLyricsModal(this.player.currentTrackIndex);
+      });
+    }
+
+    const speedBtn = document.getElementById('playerSpeedBtn');
+    if (speedBtn) {
+      speedBtn.addEventListener('click', () => {
+        this.player.cyclePlaybackRate();
+      });
+    }
+
+    // Lyrics Modal Inner Controls (الحفظ والمتابعة والتكرار)
+    const lyricsCloseBtn = document.getElementById('lyricsModalCloseBtn');
+    if (lyricsCloseBtn) lyricsCloseBtn.addEventListener('click', () => this.player.closeLyricsModal());
+
+    const lyricsPlayBtn = document.getElementById('lyricsModalPlayBtn');
+    if (lyricsPlayBtn) {
+      lyricsPlayBtn.addEventListener('click', () => {
+        this.player.togglePlay();
+        const textEl = document.getElementById('lyricsModalPlayText');
+        if (textEl) {
+          textEl.textContent = this.player.isPlaying ? 'إيقاف مؤقت' : 'تشغيل النشيد';
+        }
+      });
+    }
+
+    const lyricsLoopBtn = document.getElementById('lyricsModalLoopBtn');
+    if (lyricsLoopBtn) {
+      lyricsLoopBtn.addEventListener('click', () => {
+        this.player.toggleLoop();
+        lyricsLoopBtn.classList.toggle('active', this.player.isLooping);
+        if (this.player.isLooping) {
+          lyricsLoopBtn.style.color = 'var(--brand-emerald)';
+        } else {
+          lyricsLoopBtn.style.color = '';
+        }
+      });
+    }
+
+    const lyricsSpeedBtn = document.getElementById('lyricsModalSpeedBtn');
+    if (lyricsSpeedBtn) {
+      lyricsSpeedBtn.addEventListener('click', () => {
+        const newRate = this.player.cyclePlaybackRate();
+        lyricsSpeedBtn.textContent = `السرعة: ${newRate}x`;
+      });
+    }
+
+    const lyricsCopyBtn = document.getElementById('lyricsModalCopyBtn');
+    if (lyricsCopyBtn) {
+      lyricsCopyBtn.addEventListener('click', () => {
+        const currentTrack = this.tracks[this.player.currentTrackIndex];
+        if (currentTrack && (currentTrack.lyrics || currentTrack.lyricsPreview)) {
+          const textToCopy = currentTrack.lyrics || currentTrack.lyricsPreview;
+          navigator.clipboard.writeText(textToCopy).then(() => {
+            const originalHTML = lyricsCopyBtn.innerHTML;
+            lyricsCopyBtn.innerHTML = `<span>✓ تم النسخ</span>`;
+            setTimeout(() => { lyricsCopyBtn.innerHTML = originalHTML; }, 2000);
+          }).catch(() => {
+            alert('تم نسخ الكلمات بنجاح');
+          });
+        }
+      });
+    }
+
+    const lyricsModal = document.getElementById('lyricsReaderModal');
+    if (lyricsModal) {
+      lyricsModal.addEventListener('click', (e) => {
+        if (e.target === lyricsModal) this.player.closeLyricsModal();
+      });
+    }
+
     // Top slim seeker & bottom time slider
     const topSeeker = document.getElementById('playerTopProgressContainer');
     const timeTrack = document.getElementById('playerTimeTrack');
@@ -209,6 +285,27 @@ class AtharApp {
   handleTrackChange(track, index) {
     // Re-highlight cards in the view
     this.player.updateUI();
+
+    // Update player download button
+    const downloadBtn = document.getElementById('playerDownloadBtn');
+    if (downloadBtn && track) {
+      downloadBtn.setAttribute('href', track.audioSrc);
+      downloadBtn.setAttribute('download', `${track.title}.mp4`);
+      downloadBtn.setAttribute('title', `تحميل ${track.title}`);
+    }
+
+    // Refresh lyrics modal if currently open
+    const lyricsModal = document.getElementById('lyricsReaderModal');
+    if (lyricsModal && lyricsModal.classList.contains('active')) {
+      this.player.openLyricsModal(index);
+    }
+
+    // If on lyrics view, update active tab highlight
+    const tabs = document.querySelectorAll('.lyrics-tab-btn');
+    tabs.forEach(t => {
+      const tIdx = parseInt(t.getAttribute('data-track-index'), 10);
+      t.classList.toggle('active', tIdx === index);
+    });
   }
 
   handlePhotoChange(photo, index) {
@@ -231,9 +328,9 @@ class AtharApp {
 
   render() {
     switch (this.currentView) {
-      case 'gharsa':
-        this.appContent.innerHTML = this.renderGharsaView();
-        this.bindTrackCardEvents();
+      case 'lyrics':
+        this.appContent.innerHTML = this.renderLyricsView();
+        this.initLyricsViewEvents();
         break;
       case 'gallery':
         this.appContent.innerHTML = this.renderGalleryView();
@@ -245,6 +342,7 @@ class AtharApp {
       case 'about':
         this.appContent.innerHTML = this.renderAboutView();
         break;
+      case 'gharsa':
       case 'home':
       default:
         this.appContent.innerHTML = this.renderHomeView();
@@ -257,34 +355,27 @@ class AtharApp {
   bindTrackCardEvents() {
     const cards = document.querySelectorAll('.track-card');
     cards.forEach(card => {
-      card.addEventListener('click', () => {
+      card.addEventListener('click', (e) => {
+        // Prevent click if clicked on lyrics button or download link
+        if (e.target.closest('.btn-track-download') || e.target.closest('.btn-track-lyrics')) {
+          return;
+        }
         const trackIdx = parseInt(card.getAttribute('data-track-index'), 10);
         if (this.player.currentTrackIndex === trackIdx && this.player.isPlaying) {
-          const modal = document.getElementById('photoTheaterModal');
-          if (modal && !modal.classList.contains('active')) {
-            this.player.openPhotoTheater();
-          } else {
-            this.player.audio.pause();
-          }
+          this.player.togglePlay();
         } else {
-          this.player.loadTrack(trackIdx, true, true);
+          this.player.loadTrack(trackIdx, true, false); // Pure audio play, no intrusive modals!
         }
       });
     });
 
-    // Visual button triggers on individual tracks (video or photo theater)
-    const visualTriggers = document.querySelectorAll('.btn-track-visual');
-    visualTriggers.forEach(btn => {
+    // Wire individual lyrics triggers on track cards
+    const lyricsBtns = document.querySelectorAll('.btn-track-lyrics');
+    lyricsBtns.forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const trackIdx = parseInt(btn.getAttribute('data-track-index'), 10);
-        const track = this.tracks[trackIdx];
-        if (track && track.videoSrc) {
-          this.player.loadTrack(trackIdx, false, false);
-          this.player.openVideoModal();
-        } else {
-          this.player.loadTrack(trackIdx, true, true);
-        }
+        this.player.openLyricsModal(trackIdx);
       });
     });
   }
@@ -293,65 +384,53 @@ class AtharApp {
      VIEW: Home
      ======================================================================== */
   renderHomeView() {
-    const featuredTrack = this.tracks[0];
-    const topTracks = this.tracks.slice(0, 4);
-
     return `
-      <!-- Hero Section -->
+      <!-- Clean, Focused Hero Section -->
       <section class="hero-section" aria-labelledby="heroTitle">
-        <div class="hero-glow-blob one"></div>
-        <div class="hero-glow-blob two"></div>
-
-        <div class="container hero-grid">
+        <div class="container hero-grid" style="align-items: center;">
           
           <div class="hero-content">
             <div class="hero-badge-row">
               <span class="badge badge-emerald">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
-                المنصة الرسمية المعتمدة
+                ألبوم غرسة الإنشادي
               </span>
-              <span class="badge badge-lime">رِحلة × غرسة</span>
+              <span class="badge badge-sand">رِحلة × غرسة</span>
             </div>
 
             <h1 class="hero-title" id="heroTitle">
-              لكل أثرٍ حكاية... ولكل حكايةٍ <span class="gradient-text">صوت</span>
+              استمع.. احفظ.. <span class="gradient-text">واغرس الأثر</span>
             </h1>
 
             <p class="hero-desc">
-              مرحباً بكم في «أَثَر»، المساحة الرقمية الحية لحفظ وإتاحة ألبوم أناشيد مشروع غرسة، 
-              وتوثيق الذاكرة الميدانية لسواعد المتطوعين والمتطوعات في مبادرات منظمة رِحلة عبر ربوع ليبيا.
+              المساحة الرقمية المخصصة لسواعد المتطوعين والمتطوعات؛ للاستماع لأناشيد غرسة، حفظ وترديد كلماتها، وتحميل المسارات مباشرة دون أي تشتت.
             </p>
 
             <div class="hero-buttons">
-              <button class="btn-primary" id="btnHeroPlayGharsa" onclick="window.app.player.loadTrack(0, true)">
+              <button class="btn-primary" id="btnHeroPlayGharsa" onclick="window.app.player.loadTrack(0, true, false)">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                <span>استمع إلى ألبوم غرسة</span>
+                <span>تشغيل الألبوم كاملاً</span>
               </button>
               
-              <button class="btn-secondary" onclick="window.app.player.openPhotoTheater()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-                <span>عرض الصور مع النشيد</span>
+              <button class="btn-secondary" onclick="window.app.navigateTo('lyrics')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                <span>كلمات الأناشيد للحفظ</span>
               </button>
             </div>
           </div>
 
-          <!-- Featured Album Presentation Card with Live Photo Synchronization -->
-          <div class="hero-featured-card" id="heroFeaturedCard" style="cursor: pointer;" onclick="window.app.player.openPhotoTheater()" title="انقر لفتح مسرح الصور المصاحب للنشيد">
-            <div style="position:relative; overflow:hidden; border-radius: var(--radius-md) var(--radius-md) 0 0;">
-              <img src="${GHARSA_ALBUM.cover}" alt="غلاف ألبوم غرسة" class="hero-featured-banner" id="heroFeaturedImg" />
-              <div id="heroPhotoSyncBadge" style="position:absolute; bottom:12px; right:12px; background:rgba(4,14,9,0.85); backdrop-filter:blur(8px); padding:4px 12px; border-radius:var(--radius-full); font-size:0.75rem; border:1px solid rgba(16,185,129,0.3); color:var(--text-main); display:flex; align-items:center; gap:6px;">
-                <span class="badge-pulse"></span>
-                <span id="heroPhotoSyncText">عرض الصور التلقائي متزامن مع الأناشيد</span>
-              </div>
-            </div>
+          <!-- Featured Album Presentation Card -->
+          <div class="hero-featured-card" id="heroFeaturedCard">
+            <img src="${GHARSA_ALBUM.cover}" alt="غلاف ألبوم غرسة" class="hero-featured-banner" id="heroFeaturedImg" />
             <div class="hero-featured-info">
               <div>
-                <span class="badge badge-sand" style="margin-bottom:6px;">ألبوم غرسة الإنشادي</span>
-                <h3 style="font-size:1.3rem; margin-bottom:4px;">${GHARSA_ALBUM.title}</h3>
-                <p style="font-size:0.85rem; color:var(--text-muted);">4 مسارات رئيسية + 2 مسار استوديو • صور ميدانية موثقة</p>
+                <span class="badge badge-sand" style="margin-bottom:6px;">الإصدار الإنشادي الأول</span>
+                <h3 style="font-size:1.25rem; margin-bottom:4px;">${GHARSA_ALBUM.title}</h3>
+                <p style="font-size:0.85rem; color:var(--text-muted);">6 مسارات إنشادية واستوديو • جودة عالية</p>
               </div>
-              <button class="btn-primary" style="padding:10px 18px;" onclick="event.stopPropagation(); window.app.player.openPhotoTheater()">
-                <span>عرض مسرح الصور</span>
+              <button class="btn-primary" style="padding:10px 18px;" onclick="window.app.player.loadTrack(0, true, false)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                <span>استماع</span>
               </button>
             </div>
           </div>
@@ -362,8 +441,8 @@ class AtharApp {
         <div class="container">
           <div class="stats-ribbon">
             <div class="stat-item">
-              <span class="stat-num">4</span>
-              <span class="stat-label">أناشيد رسمية مصورة (ألبوم غرسة)</span>
+              <span class="stat-num">6</span>
+              <span class="stat-label">أناشيد رسمية واستوديو (ألبوم غرسة)</span>
             </div>
             <div class="stat-item">
               <span class="stat-num">33</span>
@@ -381,21 +460,24 @@ class AtharApp {
         </div>
       </section>
 
-      <!-- Featured Tracks Section -->
-      <section class="container" style="margin-top: 60px;" aria-labelledby="featuredTracksTitle">
+      <!-- Complete 6 Anthems Section -->
+      <section class="container" style="margin-top: 50px;" aria-labelledby="featuredTracksTitle">
         <div class="section-header">
           <div class="section-title-wrap">
             <span class="section-subtitle">أصوات النماء والعطاء</span>
-            <h2 class="section-main-title" id="featuredTracksTitle">أناشيد ألبوم غرسة الإنشادي</h2>
+            <h2 class="section-main-title" id="featuredTracksTitle">قائمة الأناشيد (${this.tracks.length} مسارات)</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 4px;">
+              انقر على أي نشيد للاستماع، أو اضغط «الكلمات» للحفظ والمتابعة، أو «تحميل» لحفظه على هاتفك.
+            </p>
           </div>
-          <button class="btn-secondary" onclick="window.app.navigateTo('gharsa')">
-            <span>عرض كافة المسارات</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          <button class="btn-secondary" onclick="window.app.navigateTo('lyrics')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+            <span>مركز التحفيظ والكلمات</span>
           </button>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 14px;">
-          ${topTracks.map((track, idx) => `
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          ${this.tracks.map((track, idx) => `
             <div class="track-card ${this.player.currentTrackIndex === idx ? 'active' : ''}" data-track-index="${idx}">
               <div class="track-card-left">
                 <button class="track-play-trigger" aria-label="تشغيل ${track.title}">
@@ -405,8 +487,13 @@ class AtharApp {
                   }
                 </button>
                 <div>
-                  <h4 class="track-meta-title">${track.trackNumber}. ${track.title}</h4>
-                  <p class="track-meta-desc">${track.theme} — ${track.format}</p>
+                  <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <span style="font-weight: 700; color: var(--brand-emerald); font-size: 0.9rem;">#${track.trackNumber}</span>
+                    <h4 class="track-meta-title" style="margin: 0;">${track.title}</h4>
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">(${track.englishTitle})</span>
+                  </div>
+                  <p class="track-meta-desc" style="margin-top: 2px;">${track.theme}</p>
+                  <p style="font-size: 0.82rem; color: var(--brand-lime); margin-top: 2px; font-style: italic;">«${track.lyricsPreview}»</p>
                 </div>
               </div>
 
@@ -419,15 +506,15 @@ class AtharApp {
                 
                 <span class="track-duration-pill">${track.duration}</span>
 
-                ${track.videoSrc ? `
-                  <button class="btn-icon btn-track-visual" data-track-index="${idx}" title="مشاهدة العرض المرئي للنشيد">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="15" x="2" y="4" rx="2"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-                  </button>
-                ` : `
-                  <button class="btn-icon btn-track-visual" data-track-index="${idx}" title="عرض صور الميدان المصاحبة للنشيد">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-                  </button>
-                `}
+                <button class="btn-track-lyrics" data-track-index="${idx}" title="عرض الكلمات للحفظ والمتابعة">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                  <span>الكلمات</span>
+                </button>
+
+                <a href="${track.audioSrc}" download="${track.title}.mp4" class="btn-track-download" title="تحميل وحفظ النشيد (MP4)">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  <span>تحميل</span>
+                </a>
               </div>
             </div>
           `).join('')}
@@ -519,107 +606,148 @@ class AtharApp {
   }
 
   /* ========================================================================
-     VIEW: Gharsa Album
+     VIEW: Lyrics Hub (مركز كلمات الأناشيد للترديد والحفظ)
      ======================================================================== */
-  renderGharsaView() {
+  renderLyricsView() {
+    const curIdx = this.currentLyricsTrackIndex || 0;
+    const activeTrack = this.tracks[curIdx] || this.tracks[0];
+    const rawLyrics = activeTrack.lyrics || activeTrack.lyricsPreview || '';
+    const stanzas = rawLyrics.split('\n\n');
+
     return `
       <div class="container" style="padding-top: 40px;">
-        
-        <!-- Album Header Card -->
-        <div class="glass-panel album-header-card">
-          <img src="${GHARSA_ALBUM.cover}" alt="غلاف ألبوم غرسة" style="width: 100%; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); border: 1px solid rgba(255,255,255,0.1);" />
-          
-          <div>
-            <div style="display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap;">
-              <span class="badge badge-emerald">${GHARSA_ALBUM.badge}</span>
-              <span class="badge badge-sand">سنة الإصدار: ${GHARSA_ALBUM.year}</span>
-              <span class="badge badge-lime">إنتاج: ${GHARSA_ALBUM.entity}</span>
-            </div>
-
-            <h1 style="font-size: clamp(1.8rem, 3vw, 2.6rem); margin-bottom: 8px;">${GHARSA_ALBUM.title}</h1>
-            <p style="font-size: 1.05rem; color: var(--text-body); margin-bottom: 24px; line-height: 1.8;">
-              ${GHARSA_ALBUM.description}
-            </p>
-
-            <div class="album-action-buttons">
-              <button class="btn-primary" onclick="window.app.player.loadTrack(0, true)">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                <span>تشغيل الألبوم كاملاً</span>
-              </button>
-              
-              <button class="btn-secondary" onclick="window.app.player.openPhotoTheater()">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-                <span>عرض صور الميدان مع الأناشيد</span>
-              </button>
-
-              <a href="${GHARSA_ALBUM.officialLinks.gharsa}" target="_blank" rel="noopener noreferrer" class="btn-secondary">
-                <span>الموقع الرسمي لمشروع غرسة</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-              </a>
-            </div>
-          </div>
+        <div class="lyrics-hub-hero">
+          <span class="badge badge-emerald" style="margin-bottom: 12px;">مركز تحفيظ الأناشيد</span>
+          <h1 style="font-size: clamp(1.8rem, 3.5vw, 2.6rem); margin-bottom: 10px;">كلمات الأناشيد للترديد والحفظ</h1>
+          <p style="color: var(--text-body); max-width: 680px; margin: 0 auto; line-height: 1.8;">
+            اختر النشيد لقراءة كلماته المشكولة، الاستماع إليه بالسرعة المناسبة، وتكراره حتى الحفظ التام لسواعد المتطوعين.
+          </p>
         </div>
 
-        <!-- Tracks List -->
-        <div class="section-header">
-          <div class="section-title-wrap">
-            <span class="section-subtitle">قائمة الأناشيد الحقيقية</span>
-            <h2 class="section-main-title">مسارات الألبوم (${this.tracks.length} أناشيد)</h2>
-          </div>
-        </div>
-
-        <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 60px;">
-          ${this.tracks.map((track, idx) => `
-            <div class="track-card ${this.player.currentTrackIndex === idx ? 'active' : ''}" data-track-index="${idx}">
-              <div class="track-card-left">
-                <button class="track-play-trigger" aria-label="تشغيل ${track.title}">
-                  ${(this.player.currentTrackIndex === idx && this.player.isPlaying)
-                    ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`
-                    : `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`
-                  }
-                </button>
-                <div>
-                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                    <span style="color: var(--brand-emerald); font-weight: 700; font-size: 0.9rem;">#${track.trackNumber}</span>
-                    <h3 class="track-meta-title" style="margin: 0; font-size: 1.15rem;">${track.title}</h3>
-                    <span style="font-size: 0.8rem; color: var(--text-muted);">(${track.englishTitle})</span>
-                  </div>
-                  <p class="track-meta-desc" style="margin-bottom: 4px;">${track.description}</p>
-                  <p style="font-size: 0.82rem; color: var(--brand-lime); font-style: italic;">«${track.lyricsPreview}»</p>
-                </div>
-              </div>
-
-              <div class="track-card-right">
-                <div class="sound-bars ${this.player.currentTrackIndex === idx && this.player.isPlaying ? 'playing' : ''}">
-                  <span class="sound-bar"></span>
-                  <span class="sound-bar"></span>
-                  <span class="sound-bar"></span>
-                </div>
-
-                <div style="text-align: left;">
-                  <span class="track-duration-pill" style="display:block;">${track.duration}</span>
-                  <span style="font-size:0.75rem; color:var(--text-muted);">${track.fileSize}</span>
-                </div>
-
-                ${track.videoSrc ? `
-                  <button class="btn-secondary btn-track-visual" data-track-index="${idx}" title="مشاهدة الفيديو المرئي للنشيد">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="15" x="2" y="4" rx="2"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-                    <span>عرض مرئي</span>
-                  </button>
-                ` : `
-                  <button class="btn-secondary btn-track-visual" data-track-index="${idx}" title="عرض صور الميدان التلقائية مع النشيد">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-                    <span>عرض الصور</span>
-                  </button>
-                `}
-              </div>
-            </div>
+        <!-- Track Selection Tabs -->
+        <div class="lyrics-hub-tabs" id="lyricsHubTabs">
+          ${this.tracks.map((t, idx) => `
+            <button class="lyrics-tab-btn ${idx === curIdx ? 'active' : ''}" data-track-index="${idx}">
+              <span>${t.trackNumber}. ${t.title}</span>
+            </button>
           `).join('')}
         </div>
 
+        <!-- Selected Track Lyrics Card -->
+        <div class="lyrics-display-card">
+          <div style="border-bottom: 1px solid var(--border-subtle); padding-bottom: 20px; margin-bottom: 24px;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 8px;">
+              <span class="badge badge-sand">النشيد #${activeTrack.trackNumber}</span>
+              <h2 style="font-size: 1.7rem; margin: 0;">${activeTrack.title}</h2>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">${activeTrack.theme} • المدة: ${activeTrack.duration}</p>
+          </div>
+
+          <!-- Memorization Control Toolbar -->
+          <div class="lyrics-memorize-toolbar" style="border-radius: var(--radius-md); margin-bottom: 28px; justify-content: center;">
+            <button class="btn-primary" id="hubPlayTrackBtn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              <span id="hubPlayTrackText">${this.player.currentTrackIndex === curIdx && this.player.isPlaying ? 'إيقاف مؤقت' : 'تشغيل النشيد'}</span>
+            </button>
+
+            <button class="btn-secondary ${this.player.isLooping ? 'active' : ''}" id="hubLoopTrackBtn" title="تكرار مستمر للنشيد للمساعدة في الحفظ">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+              <span>تكرار مستمر</span>
+            </button>
+
+            <button class="btn-secondary" id="hubSpeedTrackBtn" title="تغيير سرعة الإلقاء لتسهيل الحفظ">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>السرعة: ${this.player.playbackRate || 1.0}x</span>
+            </button>
+
+            <button class="btn-secondary" id="hubCopyTrackBtn" title="نسخ كلمات النشيد">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+              <span>نسخ الكلمات</span>
+            </button>
+
+            <a href="${activeTrack.audioSrc}" download="${activeTrack.title}.mp4" class="btn-secondary" title="تحميل النشيد للاستماع والحفظ دون إنترنت">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>تحميل النشيد</span>
+            </a>
+          </div>
+
+          <!-- Stanzas Display -->
+          <div class="lyrics-stanzas-wrap">
+            ${stanzas.map(stanza => `
+              <div class="lyrics-stanza">
+                ${stanza.split('\n').map(l => `<p class="lyrics-line">${l.trim()}</p>`).join('')}
+              </div>
+            `).join('')}
+          </div>
+        </div>
       </div>
       ${this.renderFooter()}
     `;
+  }
+
+  initLyricsViewEvents() {
+    const tabs = document.querySelectorAll('.lyrics-tab-btn');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const idx = parseInt(tab.getAttribute('data-track-index'), 10);
+        this.currentLyricsTrackIndex = idx;
+        this.appContent.innerHTML = this.renderLyricsView();
+        this.initLyricsViewEvents();
+      });
+    });
+
+    const playBtn = document.getElementById('hubPlayTrackBtn');
+    if (playBtn) {
+      playBtn.addEventListener('click', () => {
+        const curIdx = this.currentLyricsTrackIndex || 0;
+        if (this.player.currentTrackIndex === curIdx && this.player.isPlaying) {
+          this.player.togglePlay();
+        } else {
+          this.player.loadTrack(curIdx, true, false);
+        }
+        const textEl = document.getElementById('hubPlayTrackText');
+        if (textEl) {
+          textEl.textContent = this.player.isPlaying ? 'إيقاف مؤقت' : 'تشغيل النشيد';
+        }
+      });
+    }
+
+    const loopBtn = document.getElementById('hubLoopTrackBtn');
+    if (loopBtn) {
+      loopBtn.addEventListener('click', () => {
+        this.player.toggleLoop();
+        loopBtn.classList.toggle('active', this.player.isLooping);
+        if (this.player.isLooping) {
+          loopBtn.style.color = 'var(--brand-emerald)';
+        } else {
+          loopBtn.style.color = '';
+        }
+      });
+    }
+
+    const speedBtn = document.getElementById('hubSpeedTrackBtn');
+    if (speedBtn) {
+      speedBtn.addEventListener('click', () => {
+        const newRate = this.player.cyclePlaybackRate();
+        speedBtn.querySelector('span').textContent = `السرعة: ${newRate}x`;
+      });
+    }
+
+    const copyBtn = document.getElementById('hubCopyTrackBtn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        const track = this.tracks[this.currentLyricsTrackIndex || 0];
+        if (track && (track.lyrics || track.lyricsPreview)) {
+          navigator.clipboard.writeText(track.lyrics || track.lyricsPreview).then(() => {
+            const originalHTML = copyBtn.innerHTML;
+            copyBtn.innerHTML = `<span>✓ تم النسخ</span>`;
+            setTimeout(() => { copyBtn.innerHTML = originalHTML; }, 2000);
+          }).catch(() => {
+            alert('تم نسخ الكلمات بنجاح');
+          });
+        }
+      });
+    }
   }
 
   /* ========================================================================
@@ -821,10 +949,9 @@ class AtharApp {
             <div>
               <h4 class="footer-col-title">أقسام المنصة</h4>
               <ul class="footer-links-list">
-                <li><a href="#home" onclick="event.preventDefault(); window.app.navigateTo('home')">الرئيسية</a></li>
-                <li><a href="#gharsa" onclick="event.preventDefault(); window.app.navigateTo('gharsa')">ألبوم غرسة الأول</a></li>
-                <li><a href="#gallery" onclick="event.preventDefault(); window.app.navigateTo('gallery')">ذاكرة غرسة</a></li>
-                <li><a href="#rehla" onclick="event.preventDefault(); window.app.navigateTo('rehla')">ألبوم رِحلة (قريباً)</a></li>
+                <li><a href="#home" onclick="event.preventDefault(); window.app.navigateTo('home')">الأناشيد الرسمية</a></li>
+                <li><a href="#lyrics" onclick="event.preventDefault(); window.app.navigateTo('lyrics')">كلمات للحفظ والترديد</a></li>
+                <li><a href="#gallery" onclick="event.preventDefault(); window.app.navigateTo('gallery')">ذاكرة غرسة (الصور)</a></li>
                 <li><a href="#about" onclick="event.preventDefault(); window.app.navigateTo('about')">عن المنصة</a></li>
               </ul>
             </div>
