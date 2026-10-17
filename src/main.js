@@ -8,6 +8,7 @@ import { GALLERY_ITEMS, GALLERY_CATEGORIES } from './data/gallery.js';
 import { PARTNERS_INFO } from './data/partners.js';
 import { AtharAudioPlayer } from './components/AudioPlayer.js';
 import { MemoryGallery } from './components/MemoryGallery.js';
+import { AtharPWAController } from './components/PWAController.js';
 
 class AtharApp {
   constructor() {
@@ -24,6 +25,9 @@ class AtharApp {
     this.player.registerPhotoListener((photo, index) => {
       this.handlePhotoChange(photo, index);
     });
+
+    // Initialize Progressive Web App (PWA) controller
+    this.pwa = new AtharPWAController();
 
     this.initDOM();
     this.initTheme();

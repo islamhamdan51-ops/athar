@@ -133,6 +133,10 @@
     gap: 10px;
   }
 
+  .header-install-btn {
+    display: none !important;
+  }
+
   .theme-toggle-btn,
   .mobile-menu-btn {
     width: 42px;

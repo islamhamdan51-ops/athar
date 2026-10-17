@@ -30,8 +30,21 @@
     })();
   </script>
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2310b981'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z'/></svg>" />
+  <!-- Favicon & PWA Icons -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="alternate icon" type="image/png" href="/icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
+
+  <!-- Progressive Web App (PWA) Manifest & Capabilities -->
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#06110c" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#10b981" media="(prefers-color-scheme: light)" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="أَثَر ATHAR" />
+  <meta name="application-name" content="أَثَر | ATHAR" />
 
   <!-- Google Fonts: Cairo & Tajawal -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -105,7 +118,7 @@
             </button>
           </li>
           
-          <!-- Mobile Drawer Special Items (Theme & Partners) -->
+          <!-- Mobile Drawer Special Items (Theme, PWA & Partners) -->
           <li class="mobile-only-item">
             <button class="mobile-theme-row" id="mobileThemeToggleBtn" aria-label="تبديل الإضاءة">
               <span style="display:flex; align-items:center; gap:10px;">
@@ -113,6 +126,15 @@
                 <span>الإضاءة (نهاري / ليلي)</span>
               </span>
               <span class="badge badge-emerald" id="mobileThemeBadge">ليلي</span>
+            </button>
+          </li>
+          <li class="mobile-only-item" id="pwaDrawerInstallItem" style="display:none;">
+            <button class="mobile-theme-row mobile-pwa-install-btn" id="pwaDrawerInstallBtn">
+              <span style="display:flex; align-items:center; gap:10px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>تثبيت المنصة كتطبيق</span>
+              </span>
+              <span class="badge badge-emerald">تطبيق PWA</span>
             </button>
           </li>
           <li class="mobile-only-item mobile-drawer-partners">
@@ -136,6 +158,12 @@
 
       <!-- External Partner Links & Actions -->
       <div class="header-actions">
+        <!-- PWA Install Action for Desktop / Tablet -->
+        <button class="header-install-btn" id="pwaHeaderInstallBtn" style="display:none;" title="تثبيت منصة أَثَر كتطبيق مستقل على جهازك" aria-label="تثبيت التطبيق">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span class="install-btn-text">تثبيت التطبيق</span>
+        </button>
+
         <!-- Day / Night Mode Toggle Button -->
         <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="تبديل الإضاءة (ليلي / نهاري)" title="تبديل الإضاءة (ليلي / نهاري)">
           <svg id="themeToggleIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -344,6 +372,54 @@
     <button class="lightbox-nav-btn next" id="lightboxNextBtn" aria-label="الصورة التالية (سهم يسار)">
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
     </button>
+  <!-- PWA Install Banner Toast -->
+  <aside class="pwa-install-banner" id="pwaInstallBanner" role="dialog" aria-label="تثبيت تطبيق أثر" style="display: none;">
+    <div class="pwa-banner-inner">
+      <div class="pwa-banner-start">
+        <img src="/icons/icon-192.png" alt="شعار أثر" class="pwa-banner-icon" />
+        <div class="pwa-banner-text">
+          <strong class="pwa-banner-title">تثبيت منصة «أَثَر» كتطبيق</strong>
+          <p class="pwa-banner-desc">استمع للأناشيد وتصفح المعرض أينما كنت دون انقطاع وبسرعة فائقة.</p>
+        </div>
+      </div>
+      <div class="pwa-banner-actions">
+        <button class="btn-primary pwa-btn-install" id="pwaBannerInstallBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>تثبيت الآن</span>
+        </button>
+        <button class="btn-icon pwa-btn-dismiss" id="pwaBannerDismissBtn" aria-label="إغلاق التنبيه">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- iOS PWA Install Instruction Modal -->
+  <div class="ios-install-modal" id="iosInstallModal" role="dialog" aria-modal="true" aria-label="كيفية تثبيت التطبيق على آيفون" style="display:none;">
+    <div class="ios-modal-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+        <h3 style="font-size:1.15rem; color:var(--text-main); margin:0;">تثبيت «أَثَر» على آيفون وآيباد</h3>
+        <button class="btn-icon" id="iosModalCloseBtn" aria-label="إغلاق">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <p style="font-size:0.92rem; color:var(--text-body); line-height:1.7; margin-bottom:16px;">
+        يمكنك تشغيل المنصة كتطبيق كامل الشاشة على جهازك باتباع خطوتين في متصفح Safari:
+      </p>
+      <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
+        <div style="display:flex; align-items:center; gap:12px; background:var(--bg-btn-secondary); padding:10px 14px; border-radius:var(--radius-md);">
+          <span style="font-size:1.4rem;">1️⃣</span>
+          <span style="font-size:0.9rem;">انقر على أيقونة <strong>المشاركة</strong> (Share ⎋) في شريط المتصفح السفلي.</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px; background:var(--bg-btn-secondary); padding:10px 14px; border-radius:var(--radius-md);">
+          <span style="font-size:1.4rem;">2️⃣</span>
+          <span style="font-size:0.9rem;">اختر <strong>«إضافة إلى الصفحة الرئيسية»</strong> (Add to Home Screen ⊞).</span>
+        </div>
+      </div>
+      <button class="btn-primary" style="width:100%; justify-content:center;" id="iosModalConfirmBtn">
+        <span>فهمت ذلك</span>
+      </button>
+    </div>
   </div>
 
   <!-- Application Entrypoint -->
