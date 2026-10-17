@@ -259,9 +259,9 @@ export class AtharAudioPlayer {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: track.title,
         artist: 'مشروع غرسة & منظمة رِحلة',
-        album: 'ألبوم غرسة الأول',
+        album: 'ألبوم غرسة الإنشادي',
         artwork: [
-          { src: '/media/brand/gharsa-banner.png', sizes: '512x512', type: 'image/png' }
+          { src: '/media/brand/gharsa-album-cover.jpg', sizes: '512x512', type: 'image/jpeg' }
         ]
       });
 

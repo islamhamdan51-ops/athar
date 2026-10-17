@@ -1,9 +1,9 @@
 /* ==========================================================================
-   Responsive Adaptations & Breakpoints — أَثَر | ATHAR
-   تجربة فائقة السلاسة على الهواتف والأجهزة اللوحية والحواسيب
+   Responsive Adaptations & Mobile First Excellence — أَثَر | ATHAR
+   تجربة فائقة الانسيابية والتوافق التام مع جميع شاشات الهواتف والأجهزة اللوحية
    ========================================================================== */
 
-/* Tablet & Mobile Screens (<= 1024px) */
+/* Tablet Screens (<= 1024px) */
 @media (max-width: 1024px) {
   .hero-grid {
     grid-template-columns: 1fr;
@@ -30,13 +30,45 @@
   }
 }
 
-/* Mobile Screens (<= 768px) */
+/* Mobile Screens (<= 768px) — تحسين شامل ومخصص للهواتف */
 @media (max-width: 768px) {
   :root {
-    --header-height: 68px;
-    --player-height: 84px;
+    --header-height: 64px;
+    --player-height: 72px;
   }
 
+  body {
+    padding-bottom: calc(var(--player-height) + 24px);
+  }
+
+  .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* Header on Mobile */
+  .brand-logo-mark {
+    width: 38px;
+    height: 38px;
+  }
+
+  .brand-title {
+    font-size: 1.15rem;
+  }
+
+  .brand-tagline {
+    display: none;
+  }
+
+  .partner-pill-link {
+    display: none !important;
+  }
+
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  /* Mobile Navigation Drawer */
   .nav-links {
     display: none;
     position: fixed;
@@ -44,72 +76,180 @@
     left: 0;
     right: 0;
     background: var(--bg-glass-heavy);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border-bottom: 1px solid var(--border-subtle);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border-bottom: 1px solid var(--border-medium);
     flex-direction: column;
-    padding: 20px 24px;
-    gap: 12px;
-    z-index: 49;
+    padding: 16px 20px 24px;
+    gap: 8px;
+    z-index: 99;
     box-shadow: var(--shadow-lg);
+    max-height: calc(100vh - var(--header-height) - var(--player-height));
+    overflow-y: auto;
+    transform: translateY(-8px);
+    opacity: 0;
+    transition: transform var(--transition-normal), opacity var(--transition-normal);
   }
 
   .nav-links.mobile-open {
     display: flex;
+    transform: translateY(0);
+    opacity: 1;
   }
 
-  .mobile-menu-btn {
+  .nav-link-btn {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 12px 16px;
+    font-size: 1rem;
+    border-radius: var(--radius-md);
+  }
+
+  /* Mobile Partner Links inside Drawer */
+  .mobile-drawer-partners {
     display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-subtle);
   }
 
-  .partner-pill-link span {
-    display: none;
+  .mobile-partner-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--bg-btn-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    color: var(--text-main);
+    font-size: 0.9rem;
+    font-weight: 600;
   }
 
+  /* Hero Section on Mobile */
   .hero-section {
-    padding: 36px 0 50px;
+    padding: 24px 0 36px;
+  }
+
+  .hero-title {
+    font-size: clamp(1.8rem, 6vw, 2.5rem);
+    line-height: 1.25;
+  }
+
+  .hero-desc {
+    font-size: 0.98rem;
+    line-height: 1.7;
   }
 
   .hero-buttons {
     flex-direction: column;
     width: 100%;
+    gap: 12px;
   }
 
   .hero-buttons .btn-primary,
   .hero-buttons .btn-secondary {
     width: 100%;
+    min-height: 48px;
+    font-size: 0.95rem;
+    justify-content: center;
   }
 
+  /* Featured Album Card on Mobile */
+  .hero-featured-card {
+    padding: 16px;
+    border-radius: var(--radius-md);
+  }
+
+  .hero-featured-banner {
+    aspect-ratio: 16 / 9;
+    margin-bottom: 14px;
+    border-radius: var(--radius-sm);
+  }
+
+  .hero-featured-info {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .hero-featured-info .btn-primary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Stats Ribbon on Mobile */
   .stats-ribbon {
-    grid-template-columns: 1fr;
-    padding: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    padding: 18px 16px;
+    margin-top: 24px;
   }
 
-  /* Compact Bottom Player on Mobile */
+  .stat-item {
+    padding-inline-start: 12px;
+    gap: 4px;
+  }
+
+  .stat-num {
+    font-size: 1.6rem;
+  }
+
+  .stat-label {
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
+
+  /* Compact Bottom Player on Mobile (Clean & Uncluttered) */
   .player-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 16px;
+    padding: 0 12px;
     gap: 8px;
+    height: 100%;
   }
 
   .player-track-info {
-    max-width: 60%;
+    flex: 1;
+    min-width: 0;
+    max-width: calc(100% - 130px);
+    gap: 10px;
   }
 
   .player-track-cover {
     width: 44px;
     height: 44px;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+
+  .player-track-title {
+    font-size: 0.92rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .player-track-album {
-    display: none;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
   }
 
   .player-center-controls {
-    flex-direction: row;
-    gap: 8px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .player-buttons-row {
+    gap: 4px;
   }
 
   .player-time-row {
@@ -120,14 +260,63 @@
     display: none;
   }
 
+  .ctrl-btn {
+    width: 36px;
+    height: 36px;
+  }
+
   .ctrl-btn-play {
     width: 44px;
     height: 44px;
   }
 
-  .gallery-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  .player-right-tools {
+    display: none;
+  }
+
+  /* Track Cards on Mobile */
+  .track-card {
+    padding: 12px 14px;
+    flex-direction: column;
+    align-items: stretch;
     gap: 12px;
+  }
+
+  .track-card-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .track-play-trigger {
+    width: 40px;
+    height: 40px;
+  }
+
+  .track-meta-title {
+    font-size: 0.98rem;
+  }
+
+  .track-meta-desc {
+    font-size: 0.8rem;
+  }
+
+  .track-card-right {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-subtle);
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  /* Gallery Grid on Mobile (2 columns) */
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 
   .gallery-item.featured {
@@ -135,29 +324,111 @@
     grid-row: span 1;
   }
 
+  .gallery-overlay-badge {
+    display: none;
+  }
+
+  .gallery-overlay-title {
+    font-size: 0.82rem;
+  }
+
+  .gallery-overlay-meta {
+    font-size: 0.72rem;
+  }
+
+  /* Lightbox Modal on Mobile */
+  .lightbox-modal {
+    padding: 16px;
+  }
+
+  .lightbox-header {
+    top: 16px;
+    left: 16px;
+    right: 16px;
+  }
+
+  .lightbox-content {
+    max-width: 96vw;
+    max-height: 82vh;
+  }
+
+  .lightbox-main-img {
+    max-height: 65vh;
+    max-width: 95vw;
+  }
+
+  .lightbox-caption-bar {
+    margin-top: 10px;
+  }
+
+  .lightbox-caption-title {
+    font-size: 0.95rem;
+  }
+
+  .lightbox-caption-category {
+    font-size: 0.78rem;
+  }
+
   .lightbox-nav-btn {
-    width: 42px;
-    height: 42px;
+    width: 38px;
+    height: 38px;
+    background: rgba(0, 0, 0, 0.6);
   }
 
   .lightbox-nav-btn.prev {
-    right: 8px;
+    right: 6px;
   }
 
   .lightbox-nav-btn.next {
-    left: 8px;
+    left: 6px;
+  }
+
+  /* Video Modal on Mobile */
+  .video-preview-modal {
+    padding: 12px;
+  }
+
+  .video-modal-card {
+    max-width: 100%;
+    border-radius: var(--radius-md);
+  }
+
+  /* Footer on Mobile */
+  .site-footer {
+    margin-top: 50px;
+    padding: 40px 0 24px;
   }
 
   .footer-grid {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 28px;
+  }
+
+  .footer-bottom-bar {
+    flex-direction: column;
+    text-align: center;
+    gap: 14px;
   }
 }
 
-/* Extra Small Mobile (<= 480px) */
-@media (max-width: 480px) {
+/* Extra Small Phones (<= 420px) */
+@media (max-width: 420px) {
   .hero-title {
-    font-size: 2.1rem;
+    font-size: 1.7rem;
+  }
+
+  .stats-ribbon {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 14px 12px;
+  }
+
+  .stat-num {
+    font-size: 1.4rem;
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
   }
 
   .filter-tabs {
@@ -166,6 +437,20 @@
 
   .filter-tab-btn {
     padding: 6px 12px;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
+  }
+
+  .player-track-info {
+    max-width: calc(100% - 110px);
+  }
+
+  .player-track-cover {
+    width: 38px;
+    height: 38px;
+  }
+
+  .ctrl-btn-play {
+    width: 40px;
+    height: 40px;
   }
 }

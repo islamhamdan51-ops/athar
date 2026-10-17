@@ -21,6 +21,7 @@ class AtharApp {
     });
 
     this.initDOM();
+    this.initTheme();
     this.initEvents();
     this.render();
   }
@@ -30,6 +31,44 @@ class AtharApp {
     this.navButtons = document.querySelectorAll('.nav-link-btn');
     this.mobileToggle = document.getElementById('mobileMenuToggle');
     this.navLinksMenu = document.getElementById('mainNavLinks');
+  }
+
+  initTheme() {
+    const themeBtn = document.getElementById('themeToggleBtn');
+    const mobileThemeBtn = document.getElementById('mobileThemeToggleBtn');
+    const mobileIcon = document.getElementById('mobileThemeIcon');
+    const mobileBadge = document.getElementById('mobileThemeBadge');
+
+    const sunSVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+    const moonSVG = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+
+    const updateThemeDisplay = (theme) => {
+      const isLight = theme === 'light';
+      if (themeBtn) {
+        themeBtn.innerHTML = isLight ? moonSVG : sunSVG;
+        themeBtn.setAttribute('title', isLight ? 'تفعيل الوضع الليلي' : 'تفعيل الوضع النهاري');
+        themeBtn.setAttribute('aria-label', isLight ? 'تفعيل الوضع الليلي' : 'تفعيل الوضع النهاري');
+      }
+      if (mobileIcon) mobileIcon.textContent = isLight ? '🌙' : '☀️';
+      if (mobileBadge) {
+        mobileBadge.textContent = isLight ? 'نهاري' : 'ليلي';
+        mobileBadge.className = isLight ? 'badge badge-sand' : 'badge badge-emerald';
+      }
+    };
+
+    const toggleTheme = () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('athar-theme', next);
+      updateThemeDisplay(next);
+    };
+
+    if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
+    if (mobileThemeBtn) mobileThemeBtn.addEventListener('click', toggleTheme);
+
+    const initial = document.documentElement.getAttribute('data-theme') || 'dark';
+    updateThemeDisplay(initial);
   }
 
   initEvents() {
@@ -49,8 +88,18 @@ class AtharApp {
 
     // Mobile menu toggle
     if (this.mobileToggle && this.navLinksMenu) {
-      this.mobileToggle.addEventListener('click', () => {
+      this.mobileToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
         this.navLinksMenu.classList.toggle('mobile-open');
+      });
+
+      // Close mobile menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (this.navLinksMenu.classList.contains('mobile-open')) {
+          if (!this.navLinksMenu.contains(e.target) && !this.mobileToggle.contains(e.target)) {
+            this.navLinksMenu.classList.remove('mobile-open');
+          }
+        }
       });
     }
 
@@ -255,7 +304,7 @@ class AtharApp {
             <img src="${GHARSA_ALBUM.cover}" alt="غلاف ألبوم غرسة" class="hero-featured-banner" />
             <div class="hero-featured-info">
               <div>
-                <span class="badge badge-sand" style="margin-bottom:6px;">ألبوم الموسم الأول</span>
+                <span class="badge badge-sand" style="margin-bottom:6px;">ألبوم غرسة الإنشادي</span>
                 <h3 style="font-size:1.3rem; margin-bottom:4px;">${GHARSA_ALBUM.title}</h3>
                 <p style="font-size:0.85rem; color:var(--text-muted);">4 مسارات رئيسية + 2 مسار استوديو</p>
               </div>
@@ -295,7 +344,7 @@ class AtharApp {
         <div class="section-header">
           <div class="section-title-wrap">
             <span class="section-subtitle">أصوات النماء والعطاء</span>
-            <h2 class="section-main-title" id="featuredTracksTitle">أناشيد ألبوم غرسة الأول</h2>
+            <h2 class="section-main-title" id="featuredTracksTitle">أناشيد ألبوم غرسة الإنشادي</h2>
           </div>
           <button class="btn-secondary" onclick="window.app.navigateTo('gharsa')">
             <span>عرض كافة المسارات</span>
@@ -431,7 +480,7 @@ class AtharApp {
       <div class="container" style="padding-top: 40px;">
         
         <!-- Album Header Card -->
-        <div class="glass-panel" style="padding: 36px; margin-bottom: 40px; display: grid; grid-template-columns: 280px 1fr; gap: 36px; align-items: center;">
+        <div class="glass-panel album-header-card">
           <img src="${GHARSA_ALBUM.cover}" alt="غلاف ألبوم غرسة" style="width: 100%; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); border: 1px solid rgba(255,255,255,0.1);" />
           
           <div>
@@ -627,7 +676,7 @@ class AtharApp {
           </p>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 60px;">
+        <div class="about-partners-grid">
           
           <!-- Partner: Gharsa -->
           <div class="glass-panel" style="padding: 36px;">

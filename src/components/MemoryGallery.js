@@ -107,6 +107,25 @@ export class MemoryGallery {
       modal.addEventListener('click', (e) => {
         if (e.target === modal) this.closeLightbox();
       });
+
+      // Mobile touch swipe gestures
+      let touchStartX = 0;
+      let touchEndX = 0;
+      modal.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      modal.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        const diff = touchEndX - touchStartX;
+        if (Math.abs(diff) > 40) {
+          if (diff > 0) {
+            this.prevPhoto();
+          } else {
+            this.nextPhoto();
+          }
+        }
+      }, { passive: true });
     }
   }
 

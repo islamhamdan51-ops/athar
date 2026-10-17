@@ -5,12 +5,12 @@
 
 export const GHARSA_ALBUM = {
   id: 'gharsa-vol-1',
-  title: 'ألبوم غرسة — الموسم الأول',
-  englishTitle: 'Gharsa Vol. 1 — Roots of Hope',
+  title: 'ألبوم غرسة الإنشادي',
+  englishTitle: 'Gharsa Official Album — Roots of Hope',
   entity: 'مشروع غرسة & منظمة رِحلة',
   year: '2026',
-  cover: '/media/brand/gharsa-banner.png',
-  badge: 'الإصدار الرسمي الأول',
+  cover: '/media/brand/gharsa-album-cover.jpg',
+  badge: 'الإصدار الإنشادي الرسمي',
   description: 'الألبوم الإنشادي والتوثيقي الرسمي لمشروع غرسة، يوثّق بالألحان والكلمات مسيرة التشجير، وعناق الجذور بالتراب الليبي، وعزيمة المتطوعين والطلاب في مدن الجنوب والشمال لمكافحة التصحر وصناعة بيئة خضراء مستدامة.',
   officialLinks: {
     gharsa: 'https://gharsa.ly',

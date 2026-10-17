@@ -1,9 +1,13 @@
 /* ==========================================================================
    Design Tokens & Variables — أَثَر | ATHAR
-   هوية مستوحاة من تناغم غرسة (الأرض والشتلات) ورِحلة (الإنسان والأثر)
+   نظام تصميم ثنائي الإضاءة (ليلي / نهاري) متناغم مع روح غرسة ورِحلة
    ========================================================================== */
 
-:root {
+:root,
+[data-theme="dark"] {
+  /* الوضع الليلي — غابة زمردية ليلية فاخرة */
+  --theme-mode: 'dark';
+
   /* خلفيات داكنة فاخرة بطابع نباتي ليلي */
   --bg-deep: #06110c;
   --bg-surface: #0c1e15;
@@ -11,7 +15,12 @@
   --bg-card: rgba(12, 30, 21, 0.7);
   --bg-card-hover: rgba(18, 43, 31, 0.85);
   --bg-glass: rgba(10, 25, 18, 0.82);
-  --bg-glass-heavy: rgba(6, 17, 12, 0.92);
+  --bg-glass-heavy: rgba(6, 17, 12, 0.94);
+  --bg-player: rgba(6, 17, 12, 0.95);
+  --border-player: rgba(16, 185, 129, 0.25);
+  --shadow-player: 0 -10px 30px rgba(0, 0, 0, 0.6);
+  --bg-footer: rgba(6, 17, 12, 0.95);
+  --border-footer: rgba(255, 255, 255, 0.08);
 
   /* لوحة الألوان المعتمدة */
   --brand-emerald: #10b981;     /* أخضر زمردي حيوي للإجراءات الأساسية */
@@ -28,6 +37,16 @@
   --text-muted: #94a3b8;
   --text-subtle: #64748b;
   --text-brand: #34d399;
+  --text-on-emerald: #06110c;
+
+  /* الأزرار الثانوية */
+  --bg-btn-secondary: rgba(255, 255, 255, 0.06);
+  --bg-btn-secondary-hover: rgba(255, 255, 255, 0.12);
+  --text-btn-secondary: #f8fafc;
+
+  /* بطاقة الغلاف المميز */
+  --card-featured-bg: linear-gradient(145deg, rgba(16, 185, 129, 0.12), rgba(10, 25, 18, 0.7));
+  --card-featured-border: rgba(16, 185, 129, 0.25);
 
   /* الحدود والزجاج */
   --border-subtle: rgba(255, 255, 255, 0.08);
@@ -41,6 +60,27 @@
   --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
   --shadow-glow: 0 0 30px rgba(16, 185, 129, 0.22);
   --shadow-glow-lime: 0 0 25px rgba(130, 185, 57, 0.2);
+
+  /* الشارات */
+  --badge-emerald-bg: rgba(16, 185, 129, 0.15);
+  --badge-emerald-text: #10b981;
+  --badge-emerald-border: rgba(16, 185, 129, 0.3);
+
+  --badge-lime-bg: rgba(130, 185, 57, 0.15);
+  --badge-lime-text: #a3e635;
+  --badge-lime-border: rgba(130, 185, 57, 0.3);
+
+  --badge-sand-bg: rgba(212, 163, 115, 0.15);
+  --badge-sand-text: #d4a373;
+  --badge-sand-border: rgba(212, 163, 115, 0.3);
+
+  --badge-amber-bg: rgba(245, 158, 11, 0.15);
+  --badge-amber-text: #f59e0b;
+  --badge-amber-border: rgba(245, 158, 11, 0.3);
+
+  /* إضاءة الخلفية الشعاعية */
+  --radial-glow-1: rgba(16, 185, 129, 0.08);
+  --radial-glow-2: rgba(130, 185, 57, 0.06);
 
   /* زوايا التدوير */
   --radius-xs: 6px;
@@ -61,6 +101,84 @@
 
   /* أبعاد الهيكل الرئيسي */
   --header-height: 76px;
-  --player-height: 88px;
+  --player-height: 84px;
   --max-width: 1280px;
+}
+
+[data-theme="light"] {
+  /* الوضع النهاري — بياض عاجي نضر، أخضر نباتي، وتباين فائق الوضوح */
+  --theme-mode: 'light';
+
+  --bg-deep: #f6f8f5;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #edf4ee;
+  --bg-card: rgba(255, 255, 255, 0.88);
+  --bg-card-hover: #ffffff;
+  --bg-glass: rgba(255, 255, 255, 0.88);
+  --bg-glass-heavy: rgba(255, 255, 255, 0.95);
+  --bg-player: rgba(255, 255, 255, 0.97);
+  --border-player: rgba(5, 150, 105, 0.22);
+  --shadow-player: 0 -10px 30px rgba(15, 23, 42, 0.08);
+  --bg-footer: #edf2ed;
+  --border-footer: rgba(15, 23, 42, 0.08);
+
+  /* ألوان الهوية في النهار بتباين عالي */
+  --brand-emerald: #059669;
+  --brand-emerald-glow: rgba(5, 150, 105, 0.18);
+  --brand-lime: #4d7c0f;
+  --brand-forest: #064e3b;
+  --brand-sand: #b45309;
+  --brand-sand-subtle: rgba(180, 83, 9, 0.08);
+  --brand-amber: #d97706;
+
+  /* نصوص داكنة نقية شديدة الوضوح */
+  --text-main: #0f172a;
+  --text-body: #334155;
+  --text-muted: #64748b;
+  --text-subtle: #94a3b8;
+  --text-brand: #059669;
+  --text-on-emerald: #ffffff;
+
+  /* الأزرار الثانوية في النهار */
+  --bg-btn-secondary: rgba(15, 23, 42, 0.05);
+  --bg-btn-secondary-hover: rgba(15, 23, 42, 0.09);
+  --text-btn-secondary: #0f172a;
+
+  /* بطاقة الغلاف في النهار */
+  --card-featured-bg: linear-gradient(145deg, rgba(5, 150, 105, 0.08), rgba(255, 255, 255, 0.95));
+  --card-featured-border: rgba(5, 150, 105, 0.25);
+
+  /* حدود النهار */
+  --border-subtle: rgba(15, 23, 42, 0.08);
+  --border-medium: rgba(15, 23, 42, 0.15);
+  --border-focus: #059669;
+  --border-emerald-glow: rgba(5, 150, 105, 0.35);
+
+  /* ظلال النهار الناعمة */
+  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 16px 40px rgba(15, 23, 42, 0.11);
+  --shadow-glow: 0 0 25px rgba(5, 150, 105, 0.14);
+  --shadow-glow-lime: 0 0 20px rgba(77, 124, 15, 0.12);
+
+  /* الشارات في النهار */
+  --badge-emerald-bg: rgba(5, 150, 105, 0.1);
+  --badge-emerald-text: #047857;
+  --badge-emerald-border: rgba(5, 150, 105, 0.25);
+
+  --badge-lime-bg: rgba(77, 124, 15, 0.1);
+  --badge-lime-text: #3f6212;
+  --badge-lime-border: rgba(77, 124, 15, 0.25);
+
+  --badge-sand-bg: rgba(180, 83, 9, 0.1);
+  --badge-sand-text: #9a3412;
+  --badge-sand-border: rgba(180, 83, 9, 0.25);
+
+  --badge-amber-bg: rgba(217, 119, 6, 0.1);
+  --badge-amber-text: #b45309;
+  --badge-amber-border: rgba(217, 119, 6, 0.25);
+
+  /* إضاءة الخلفية الشعاعية في النهار */
+  --radial-glow-1: rgba(5, 150, 105, 0.06);
+  --radial-glow-2: rgba(77, 124, 15, 0.05);
 }

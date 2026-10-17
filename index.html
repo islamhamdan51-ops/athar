@@ -14,8 +14,21 @@
   <meta property="og:title" content="أَثَر | ATHAR — لكل أثر حكاية، ولكل حكاية صوت" />
   <meta property="og:description" content="استمع إلى ألبوم أناشيد غرسة وتصفح ذاكرة العمل التطوعي والميداني لمنظمة رِحلة ومشروع غرسة." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="/media/brand/gharsa-banner.png" />
+  <meta property="og:image" content="/media/brand/gharsa-album-cover.jpg" />
   <meta property="og:locale" content="ar_LY" />
+
+  <!-- Pre-render Theme Setter (Prevents FOUC) -->
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('athar-theme');
+        if (!saved) {
+          saved = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        }
+        document.documentElement.setAttribute('data-theme', saved || 'dark');
+      } catch(e) {}
+    })();
+  </script>
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2310b981'><path d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z'/></svg>" />
@@ -91,11 +104,53 @@
               عن المنصة
             </button>
           </li>
+          
+          <!-- Mobile Drawer Special Items (Theme & Partners) -->
+          <li class="mobile-only-item">
+            <button class="mobile-theme-row" id="mobileThemeToggleBtn" aria-label="تبديل الإضاءة">
+              <span style="display:flex; align-items:center; gap:10px;">
+                <span id="mobileThemeIcon">☀️</span>
+                <span>الإضاءة (نهاري / ليلي)</span>
+              </span>
+              <span class="badge badge-emerald" id="mobileThemeBadge">ليلي</span>
+            </button>
+          </li>
+          <li class="mobile-only-item mobile-drawer-partners">
+            <a href="https://gharsa.ly" target="_blank" rel="noopener noreferrer" class="mobile-partner-btn">
+              <span style="display:flex; align-items:center; gap:8px;">
+                <span class="badge badge-emerald">غرسة</span>
+                <span>مشروع غرسة الوطني</span>
+              </span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+            <a href="https://rehlaa.org" target="_blank" rel="noopener noreferrer" class="mobile-partner-btn">
+              <span style="display:flex; align-items:center; gap:8px;">
+                <span class="badge badge-lime">رِحلة</span>
+                <span>منظمة رِحلة للتنمية</span>
+              </span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+          </li>
         </ul>
       </nav>
 
-      <!-- External Partner Links & Mobile Hamburger -->
+      <!-- External Partner Links & Actions -->
       <div class="header-actions">
+        <!-- Day / Night Mode Toggle Button -->
+        <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="تبديل الإضاءة (ليلي / نهاري)" title="تبديل الإضاءة (ليلي / نهاري)">
+          <svg id="themeToggleIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+
         <a href="https://gharsa.ly" target="_blank" rel="noopener noreferrer" class="partner-pill-link" title="الموقع الرسمي لمشروع غرسة">
           <span class="badge badge-emerald">غرسة</span>
           <span>gharsa.ly</span>
@@ -138,14 +193,14 @@
       <!-- Track Meta (Left) -->
       <div class="player-track-info">
         <img 
-          src="/media/brand/gharsa-banner.png" 
+          src="/media/brand/gharsa-album-cover.jpg" 
           alt="غلاف الألبوم" 
           class="player-track-cover" 
           id="playerVinylCover" 
         />
         <div class="player-track-meta">
           <span class="player-track-title" id="playerTrackTitle">عناق الجذور</span>
-          <span class="player-track-album" id="playerTrackAlbum">ألبوم غرسة — الموسم الأول</span>
+          <span class="player-track-album" id="playerTrackAlbum">ألبوم غرسة الإنشادي</span>
         </div>
       </div>
 
