@@ -20,6 +20,11 @@ class AtharApp {
       this.handleTrackChange(track, index);
     });
 
+    // Register live photo slideshow listener
+    this.player.registerPhotoListener((photo, index) => {
+      this.handlePhotoChange(photo, index);
+    });
+
     this.initDOM();
     this.initTheme();
     this.initEvents();
@@ -202,6 +207,24 @@ class AtharApp {
     this.player.updateUI();
   }
 
+  handlePhotoChange(photo, index) {
+    // Smoothly update live hero banner photo if on home view
+    const heroImg = document.getElementById('heroFeaturedImg');
+    const heroText = document.getElementById('heroPhotoSyncText');
+    if (heroImg && this.player.isPlaying) {
+      heroImg.style.transition = 'opacity 0.35s ease-in-out';
+      heroImg.style.opacity = '0.3';
+      setTimeout(() => {
+        heroImg.src = photo.src;
+        heroImg.alt = photo.title;
+        heroImg.style.opacity = '1';
+      }, 180);
+      if (heroText) {
+        heroText.textContent = `صورة ${index + 1}/33: ${photo.title}`;
+      }
+    }
+  }
+
   render() {
     switch (this.currentView) {
       case 'gharsa':
@@ -277,8 +300,7 @@ class AtharApp {
             </div>
 
             <h1 class="hero-title" id="heroTitle">
-              لكل أثرٍ حكاية... <br />
-              ولكل حكايةٍ <span class="gradient-text">صوت</span>.
+              لكل أثرٍ حكاية... ولكل حكايةٍ <span class="gradient-text">صوت</span>
             </h1>
 
             <p class="hero-desc">
@@ -292,24 +314,30 @@ class AtharApp {
                 <span>استمع إلى ألبوم غرسة</span>
               </button>
               
-              <button class="btn-secondary" onclick="window.app.navigateTo('gallery')">
+              <button class="btn-secondary" onclick="window.app.player.openPhotoTheater()">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-                <span>استكشف ذاكرة الصور (33 صورة)</span>
+                <span>عرض الصور مع النشيد (33 صورة)</span>
               </button>
             </div>
           </div>
 
-          <!-- Featured Album Presentation Card -->
-          <div class="hero-featured-card">
-            <img src="${GHARSA_ALBUM.cover}" alt="غلاف ألبوم غرسة" class="hero-featured-banner" />
+          <!-- Featured Album Presentation Card with Live Photo Synchronization -->
+          <div class="hero-featured-card" id="heroFeaturedCard" style="cursor: pointer;" onclick="window.app.player.openPhotoTheater()" title="انقر لفتح مسرح الصور المصاحب للنشيد">
+            <div style="position:relative; overflow:hidden; border-radius: var(--radius-md) var(--radius-md) 0 0;">
+              <img src="${GHARSA_ALBUM.cover}" alt="غلاف ألبوم غرسة" class="hero-featured-banner" id="heroFeaturedImg" />
+              <div id="heroPhotoSyncBadge" style="position:absolute; bottom:12px; right:12px; background:rgba(4,14,9,0.85); backdrop-filter:blur(8px); padding:4px 12px; border-radius:var(--radius-full); font-size:0.75rem; border:1px solid rgba(16,185,129,0.3); color:var(--text-main); display:flex; align-items:center; gap:6px;">
+                <span class="badge-pulse"></span>
+                <span id="heroPhotoSyncText">عرض الصور التلقائي متزامن مع الأناشيد</span>
+              </div>
+            </div>
             <div class="hero-featured-info">
               <div>
                 <span class="badge badge-sand" style="margin-bottom:6px;">ألبوم غرسة الإنشادي</span>
                 <h3 style="font-size:1.3rem; margin-bottom:4px;">${GHARSA_ALBUM.title}</h3>
-                <p style="font-size:0.85rem; color:var(--text-muted);">4 مسارات رئيسية + 2 مسار استوديو</p>
+                <p style="font-size:0.85rem; color:var(--text-muted);">4 مسارات رئيسية + 2 مسار استوديو • 33 صورة ميدانية</p>
               </div>
-              <button class="btn-primary" style="padding:10px 18px;" onclick="window.app.navigateTo('gharsa')">
-                <span>تصفح الألبوم</span>
+              <button class="btn-primary" style="padding:10px 18px;" onclick="event.stopPropagation(); window.app.player.openPhotoTheater()">
+                <span>عرض مسرح الصور</span>
               </button>
             </div>
           </div>
@@ -501,6 +529,11 @@ class AtharApp {
                 <span>تشغيل الألبوم كاملاً</span>
               </button>
               
+              <button class="btn-secondary" onclick="window.app.player.openPhotoTheater()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                <span>عرض صور الميدان مع الأناشيد</span>
+              </button>
+
               <a href="${GHARSA_ALBUM.officialLinks.gharsa}" target="_blank" rel="noopener noreferrer" class="btn-secondary">
                 <span>الموقع الرسمي لمشروع غرسة</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
@@ -556,7 +589,10 @@ class AtharApp {
                     <span>عرض مرئي</span>
                   </button>
                 ` : `
-                  <span class="badge badge-sand" style="font-size:0.75rem;">استوديو MP3</span>
+                  <button class="btn-secondary btn-track-visual" data-track-index="${idx}" style="padding: 6px 14px; font-size: 0.8rem;" title="عرض صور الميدان التلقائية مع النشيد">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                    <span>عرض الصور</span>
+                  </button>
                 `}
               </div>
             </div>

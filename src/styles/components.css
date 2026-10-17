@@ -378,9 +378,10 @@
 }
 
 .hero-title {
-  font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+  font-size: clamp(2.2rem, 4.2vw, 3.6rem);
   font-weight: 800;
-  line-height: 1.2;
+  line-height: 1.25;
+  text-wrap: balance;
 }
 
 .hero-title .gradient-text {

@@ -241,6 +241,39 @@
   cursor: pointer;
 }
 
+/* Slideshow Button & Pulse Indicator */
+.btn-player-slideshow {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: var(--brand-emerald);
+  transition: all var(--transition-fast);
+}
+
+.btn-player-slideshow:hover {
+  background: rgba(16, 185, 129, 0.22);
+  border-color: var(--brand-emerald);
+  color: var(--text-main);
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
+}
+
+.badge-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.4); opacity: 0.4; }
+}
+
 /* Video Modal for Visual Preview */
 .video-preview-modal {
   position: fixed;
@@ -287,4 +320,155 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+/* ==========================================================================
+   Photo Theater Modal — مسرح الذاكرة البصرية المصاحب للنشيد
+   ========================================================================== */
+.photo-theater-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 250;
+  background: rgba(4, 14, 9, 0.95);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  display: none;
+  flex-direction: column;
+  padding: 20px 24px;
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.photo-theater-modal.active {
+  display: flex;
+  opacity: 1;
+}
+
+.photo-theater-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 16px;
+}
+
+.photo-theater-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.theater-track-indicator {
+  font-size: 0.92rem;
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.photo-theater-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.photo-theater-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+  margin-top: 14px;
+  min-height: 0;
+}
+
+.theater-image-wrapper {
+  position: relative;
+  max-width: 900px;
+  max-height: 72vh;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.theater-main-img {
+  max-width: 100%;
+  max-height: calc(72vh - 80px);
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: opacity 0.4s ease-in-out, transform 4s ease-out;
+}
+
+.theater-caption-card {
+  margin-top: 14px;
+  text-align: center;
+  background: rgba(13, 27, 20, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: var(--radius-md);
+  padding: 10px 24px;
+  max-width: 600px;
+  width: 100%;
+}
+
+.theater-photo-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+
+.theater-photo-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.theater-nav-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-main);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  z-index: 10;
+}
+
+.theater-nav-btn:hover {
+  background: var(--brand-emerald);
+  color: var(--text-on-emerald);
+  transform: scale(1.1);
+  box-shadow: 0 0 20px var(--brand-emerald-glow);
+}
+
+@media (max-width: 768px) {
+  .photo-theater-modal {
+    padding: 14px 12px;
+  }
+  .theater-nav-btn {
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.6);
+  }
+  .theater-main-img {
+    max-height: 55vh;
+  }
+  .theater-caption-card {
+    padding: 8px 14px;
+  }
+  .theater-photo-title {
+    font-size: 0.95rem;
+  }
 }
