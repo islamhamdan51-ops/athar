@@ -22,11 +22,6 @@ class AtharApp {
       this.handleTrackChange(track, index);
     });
 
-    // Register live photo slideshow listener
-    this.player.registerPhotoListener((photo, index) => {
-      this.handlePhotoChange(photo, index);
-    });
-
     // Initialize Progressive Web App (PWA) controller
     this.pwa = new AtharPWAController();
 
@@ -143,8 +138,6 @@ class AtharApp {
     const shuffleBtn = document.getElementById('playerShuffleBtn');
     const muteBtn = document.getElementById('playerMuteBtn');
     const volSlider = document.getElementById('playerVolumeSlider');
-    const visualBtn = document.getElementById('playerVisualBtn');
-    const videoModalClose = document.getElementById('videoModalCloseBtn');
 
     if (playBtn) playBtn.addEventListener('click', () => this.player.togglePlay());
     if (nextBtn) nextBtn.addEventListener('click', () => this.player.next());
@@ -157,14 +150,6 @@ class AtharApp {
       volSlider.addEventListener('input', (e) => {
         this.player.setVolume(e.target.value / 100);
       });
-    }
-
-    if (visualBtn) {
-      visualBtn.addEventListener('click', () => this.player.openVideoModal());
-    }
-
-    if (videoModalClose) {
-      videoModalClose.addEventListener('click', () => this.player.closeVideoModal());
     }
 
     // Direct Lyrics Reader and Speed Controls in Player Bar
@@ -308,23 +293,6 @@ class AtharApp {
     });
   }
 
-  handlePhotoChange(photo, index) {
-    // Smoothly update live hero banner photo if on home view
-    const heroImg = document.getElementById('heroFeaturedImg');
-    const heroText = document.getElementById('heroPhotoSyncText');
-    if (heroImg && this.player.isPlaying) {
-      heroImg.style.transition = 'opacity 0.35s ease-in-out';
-      heroImg.style.opacity = '0.3';
-      setTimeout(() => {
-        heroImg.src = photo.src;
-        heroImg.alt = photo.title;
-        heroImg.style.opacity = '1';
-      }, 180);
-      if (heroText) {
-        heroText.textContent = `صورة ${index + 1}: ${photo.title}`;
-      }
-    }
-  }
 
   render() {
     switch (this.currentView) {

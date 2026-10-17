@@ -31,7 +31,6 @@ export class AtharAudioPlayer {
     this.audio.volume = this.volume;
 
     this.initAudioEvents();
-    this.initPhotoTheaterDOM();
   }
 
   get currentTrack() {
@@ -43,13 +42,11 @@ export class AtharAudioPlayer {
       this.isPlaying = true;
       this.updateUI();
       this.updateMediaSession();
-      this.startPhotoSlideshow();
     });
 
     this.audio.addEventListener('pause', () => {
       this.isPlaying = false;
       this.updateUI();
-      this.stopPhotoSlideshow();
     });
 
     this.audio.addEventListener('timeupdate', () => {
@@ -80,7 +77,7 @@ export class AtharAudioPlayer {
     });
   }
 
-  loadTrack(index, autoPlay = true, showVisuals = false) {
+  loadTrack(index, autoPlay = true) {
     if (index < 0 || index >= this.tracks.length) return;
     this.currentTrackIndex = index;
     const track = this.currentTrack;
@@ -96,14 +93,6 @@ export class AtharAudioPlayer {
       this.audio.play().catch(err => {
         console.log('Autoplay prevented by browser, waiting for user click:', err);
       });
-      if (showVisuals) {
-        this.openPhotoTheater();
-      } else {
-        const modal = document.getElementById('photoTheaterModal');
-        if (modal && modal.classList.contains('active')) {
-          this.updatePhotoTheaterUI();
-        }
-      }
     }
   }
 
@@ -299,185 +288,10 @@ export class AtharAudioPlayer {
     }
   }
 
-  openVideoModal() {
-    const track = this.currentTrack;
-    if (!track.videoSrc) {
-      // For audio tracks without MP4 video, open the Photo Theater Slideshow directly!
-      this.openPhotoTheater();
-      return;
-    }
-
-    const modal = document.getElementById('videoPreviewModal');
-    const modalVideo = document.getElementById('modalVideoPlayer');
-    const modalTitle = document.getElementById('modalVideoTitle');
-
-    if (modal && modalVideo) {
-      modalTitle.textContent = `${track.title} — العرض المرئي`;
-      modalVideo.src = track.videoSrc;
-      modal.classList.add('active');
-      modalVideo.play().catch(e => console.log(e));
-
-      // Pause background audio while video plays
-      if (this.isPlaying) {
-        this.audio.pause();
-      }
-    }
-  }
-
-  closeVideoModal() {
-    const modal = document.getElementById('videoPreviewModal');
-    const modalVideo = document.getElementById('modalVideoPlayer');
-    if (modal && modalVideo) {
-      modalVideo.pause();
-      modalVideo.src = '';
-      modal.classList.remove('active');
-    }
-  }
-
-  /* ========================================================================
-     Photo Slideshow Theater System (العرض التلقائي للصور مع النشيد)
-     ======================================================================== */
-  initPhotoTheaterDOM() {
-    // Bind buttons in photo theater modal
-    const closeBtn = document.getElementById('theaterCloseBtn');
-    const prevBtn = document.getElementById('theaterPrevBtn');
-    const nextBtn = document.getElementById('theaterNextBtn');
-    const toggleTimerBtn = document.getElementById('theaterToggleTimerBtn');
-    const playerPhotoBtn = document.getElementById('playerPhotoSlideBtn');
-
-    if (closeBtn) closeBtn.addEventListener('click', () => this.closePhotoTheater());
-    if (prevBtn) prevBtn.addEventListener('click', () => this.prevPhoto());
-    if (nextBtn) nextBtn.addEventListener('click', () => this.nextPhoto());
-    if (toggleTimerBtn) toggleTimerBtn.addEventListener('click', () => this.togglePhotoTimer());
-    if (playerPhotoBtn) playerPhotoBtn.addEventListener('click', () => this.openPhotoTheater());
-
-    // Close on Escape or click outside
-    window.addEventListener('keydown', (e) => {
-      const modal = document.getElementById('photoTheaterModal');
-      if (modal && modal.classList.contains('active')) {
-        if (e.key === 'Escape') {
-          this.closePhotoTheater();
-          this.closeLyricsModal();
-        }
-        if (e.key === 'ArrowRight') this.prevPhoto();
-        if (e.key === 'ArrowLeft') this.nextPhoto();
-        if (e.key === ' ') {
-          e.preventDefault();
-          this.togglePlay();
-        }
-      }
-    });
-
-    const modal = document.getElementById('photoTheaterModal');
-    if (modal) {
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) this.closePhotoTheater();
-      });
-    }
-  }
-
-  registerPhotoListener(callback) {
-    if (typeof callback === 'function') {
-      this.photoListeners.push(callback);
-    }
-  }
-
-  notifyPhotoChange() {
-    const photo = this.galleryItems[this.currentPhotoIndex];
-    if (!photo) return;
-
-    this.photoListeners.forEach(cb => {
-      try { cb(photo, this.currentPhotoIndex); } catch(e) {}
-    });
-
-    this.updatePhotoTheaterUI();
-  }
-
-  startPhotoSlideshow() {
-    if (this.photoTimer) clearInterval(this.photoTimer);
-    if (!this.isPhotoSlideshowRunning) return;
-
-    this.notifyPhotoChange();
-    this.photoTimer = setInterval(() => {
-      if (this.isPlaying && this.isPhotoSlideshowRunning) {
-        this.currentPhotoIndex = (this.currentPhotoIndex + 1) % this.galleryItems.length;
-        this.notifyPhotoChange();
-      }
-    }, this.photoIntervalMs);
-  }
-
-  stopPhotoSlideshow() {
-    if (this.photoTimer) {
-      clearInterval(this.photoTimer);
-      this.photoTimer = null;
-    }
-  }
-
-  togglePhotoTimer() {
-    this.isPhotoSlideshowRunning = !this.isPhotoSlideshowRunning;
-    const btn = document.getElementById('theaterTimerStateText');
-    if (btn) {
-      btn.textContent = this.isPhotoSlideshowRunning ? 'تبديل تلقائي: نشط (4.5ث)' : 'تبديل تلقائي: متوقف';
-    }
-    if (this.isPhotoSlideshowRunning && this.isPlaying) {
-      this.startPhotoSlideshow();
-    } else {
-      this.stopPhotoSlideshow();
-    }
-  }
-
-  nextPhoto() {
-    this.currentPhotoIndex = (this.currentPhotoIndex + 1) % this.galleryItems.length;
-    this.notifyPhotoChange();
-  }
-
-  prevPhoto() {
-    this.currentPhotoIndex = (this.currentPhotoIndex - 1 + this.galleryItems.length) % this.galleryItems.length;
-    this.notifyPhotoChange();
-  }
-
-  openPhotoTheater() {
-    const modal = document.getElementById('photoTheaterModal');
-    if (!modal) return;
-    this.updatePhotoTheaterUI();
-    modal.classList.add('active');
-
-    if (!this.isPlaying) {
-      this.audio.play().catch(() => {});
-    }
-  }
-
-  closePhotoTheater() {
-    const modal = document.getElementById('photoTheaterModal');
-    if (modal) {
-      modal.classList.remove('active');
-    }
-  }
-
-  updatePhotoTheaterUI() {
-    const photo = this.galleryItems[this.currentPhotoIndex];
-    if (!photo) return;
-
-    const img = document.getElementById('theaterMainImg');
-    const counter = document.getElementById('theaterCounter');
-    const title = document.getElementById('theaterTitle');
-    const cat = document.getElementById('theaterCategoryBadge');
-    const trackInd = document.getElementById('theaterTrackIndicator');
-
-    if (img) {
-      if (img.getAttribute('data-src') !== photo.src) {
-        img.style.opacity = '0.3';
-        img.src = photo.src;
-        img.setAttribute('data-src', photo.src);
-        img.alt = photo.title;
-        setTimeout(() => { img.style.opacity = '1'; }, 40);
-      }
-    }
-    if (counter) counter.textContent = `${this.currentPhotoIndex + 1} / ${this.galleryItems.length}`;
-    if (title) title.textContent = photo.title;
-    if (cat) cat.textContent = photo.category;
-    if (trackInd) trackInd.textContent = `النشيد: ${this.currentTrack.title}`;
-  }
+  openVideoModal() {}
+  closeVideoModal() {}
+  openPhotoTheater() {}
+  closePhotoTheater() {}
 
   /* ========================================================================
      Lyrics Memorization System (قارئ الكلمات للمتطوعين للحفظ والمتابعة)
