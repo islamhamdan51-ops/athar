@@ -241,10 +241,20 @@ class AtharApp {
 
     if (topSeeker) topSeeker.addEventListener('click', (e) => handleSeek(e, topSeeker));
     if (timeTrack) timeTrack.addEventListener('click', (e) => handleSeek(e, timeTrack));
+
+    // Initialize volume slider fill and badge percentage
+    if (this.player && typeof this.player.updateVolumeUI === 'function') {
+      this.player.updateVolumeUI();
+    }
   }
 
   navigateTo(view) {
     this.currentView = view;
+
+    // When entering lyrics view, open the currently loaded/playing track
+    if (view === 'lyrics') {
+      this.currentLyricsTrackIndex = this.player ? this.player.currentTrackIndex : 0;
+    }
 
     // Update active class on nav links
     this.navButtons.forEach(btn => {
@@ -274,8 +284,9 @@ class AtharApp {
     // Update player download button
     const downloadBtn = document.getElementById('playerDownloadBtn');
     if (downloadBtn && track) {
+      const ext = track.audioSrc.endsWith('.mp3') ? 'mp3' : 'mp4';
       downloadBtn.setAttribute('href', track.audioSrc);
-      downloadBtn.setAttribute('download', `${track.title}.mp4`);
+      downloadBtn.setAttribute('download', `${track.title}.${ext}`);
       downloadBtn.setAttribute('title', `تحميل ${track.title}`);
     }
 
@@ -285,12 +296,18 @@ class AtharApp {
       this.player.openLyricsModal(index);
     }
 
-    // If on lyrics view, update active tab highlight
-    const tabs = document.querySelectorAll('.lyrics-tab-btn');
-    tabs.forEach(t => {
-      const tIdx = parseInt(t.getAttribute('data-track-index'), 10);
-      t.classList.toggle('active', tIdx === index);
-    });
+    // If on lyrics view, synchronize active track index and re-render stanzas
+    if (this.currentView === 'lyrics') {
+      this.currentLyricsTrackIndex = index;
+      this.appContent.innerHTML = this.renderLyricsView();
+      this.initLyricsViewEvents();
+    } else {
+      const tabs = document.querySelectorAll('.lyrics-tab-btn');
+      tabs.forEach(t => {
+        const tIdx = parseInt(t.getAttribute('data-track-index'), 10);
+        t.classList.toggle('active', tIdx === index);
+      });
+    }
   }
 
 
@@ -394,7 +411,7 @@ class AtharApp {
               <div>
                 <span class="badge badge-sand" style="margin-bottom:6px;">الإصدار الإنشادي الأول</span>
                 <h3 style="font-size:1.25rem; margin-bottom:4px;">${GHARSA_ALBUM.title}</h3>
-                <p style="font-size:0.85rem; color:var(--text-muted);">6 مسارات إنشادية واستوديو • جودة عالية</p>
+                <p style="font-size:0.85rem; color:var(--text-muted);">4 مسارات إنشادية واستوديو • جودة عالية</p>
               </div>
               <button class="btn-primary" style="padding:10px 18px;" onclick="window.app.player.loadTrack(0, true, false)">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
@@ -409,7 +426,7 @@ class AtharApp {
         <div class="container">
           <div class="stats-ribbon">
             <div class="stat-item">
-              <span class="stat-num">6</span>
+              <span class="stat-num">4</span>
               <span class="stat-label">أناشيد رسمية واستوديو (ألبوم غرسة)</span>
             </div>
             <div class="stat-item">
@@ -428,7 +445,7 @@ class AtharApp {
         </div>
       </section>
 
-      <!-- Complete 6 Anthems Section -->
+      <!-- Complete 4 Anthems Section -->
       <section class="container" style="margin-top: 50px;" aria-labelledby="featuredTracksTitle">
         <div class="section-header">
           <div class="section-title-wrap">
@@ -479,7 +496,7 @@ class AtharApp {
                   <span>الكلمات</span>
                 </button>
 
-                <a href="${track.audioSrc}" download="${track.title}.mp4" class="btn-track-download" title="تحميل وحفظ النشيد (MP4)">
+                <a href="${track.audioSrc}" download="${track.title}.${track.audioSrc.endsWith('.mp3') ? 'mp3' : 'mp4'}" class="btn-track-download" title="تحميل وحفظ النشيد">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                   <span>تحميل</span>
                 </a>
@@ -633,7 +650,7 @@ class AtharApp {
               <span>نسخ الكلمات</span>
             </button>
 
-            <a href="${activeTrack.audioSrc}" download="${activeTrack.title}.mp4" class="btn-secondary" title="تحميل النشيد للاستماع والحفظ دون إنترنت">
+            <a href="${activeTrack.audioSrc}" download="${activeTrack.title}.${activeTrack.audioSrc.endsWith('.mp3') ? 'mp3' : 'mp4'}" class="btn-secondary" title="تحميل النشيد للاستماع والحفظ دون إنترنت">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               <span>تحميل النشيد</span>
             </a>

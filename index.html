@@ -67,12 +67,26 @@
       
       <!-- Brand Logo & Tagline -->
       <div class="brand-wrapper" id="brandNavHome" role="button" tabindex="0" aria-label="أَثَر — العودة إلى الصفحة الرئيسية">
-        <div class="brand-logo-mark">
-          <!-- Stylized Seedling & Soundwave Icon -->
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" opacity="0.3"/>
-            <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>
-            <path d="M9 13a3 3 0 0 0 6 0"/>
+        <div class="brand-logo-mark" aria-hidden="true">
+          <!-- Elegant ATHAR Acoustic Sprout & Resonance Rings Emblem -->
+          <svg width="28" height="28" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="logoEmblemGrad" x1="4" y1="32" x2="32" y2="4" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#059669"/>
+                <stop offset="50%" stop-color="#10b981"/>
+                <stop offset="100%" stop-color="#84cc16"/>
+              </linearGradient>
+            </defs>
+            <!-- Resonance Acoustic Radii (أصداء الأثر) -->
+            <path d="M7 18C7 11.925 11.925 7 18 7" stroke="url(#logoEmblemGrad)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="0.1 5" opacity="0.65"/>
+            <path d="M29 18C29 24.075 24.075 29 18 29" stroke="url(#logoEmblemGrad)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="0.1 5" opacity="0.65"/>
+            <!-- Rising Stem & Leaf Canopy of Athar -->
+            <path d="M18 29V11" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+            <path d="M18 21C22 17 25 17 25 17" stroke="url(#logoEmblemGrad)" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M18 24C14 20 11 20 11 20" stroke="url(#logoEmblemGrad)" stroke-width="2.2" stroke-linecap="round"/>
+            <!-- Acoustic Crest Wave / Upper Madda -->
+            <path d="M14 9C16 7 18 10 20 8C21.5 6.5 23 7.5 24 8.5" fill="none" stroke="url(#logoEmblemGrad)" stroke-width="2.4" stroke-linecap="round"/>
+            <circle cx="18" cy="8" r="2" fill="#84cc16"/>
           </svg>
         </div>
         <div class="brand-text-block">
@@ -173,18 +187,6 @@
           </svg>
         </button>
 
-        <a href="https://gharsa.ly" target="_blank" rel="noopener noreferrer" class="partner-pill-link" title="الموقع الرسمي لمشروع غرسة">
-          <span class="badge badge-emerald">غرسة</span>
-          <span>gharsa.ly</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </a>
-
-        <a href="https://rehlaa.org" target="_blank" rel="noopener noreferrer" class="partner-pill-link" title="الموقع الرسمي لمنظمة رِحلة للتنمية المستدامة">
-          <span class="badge badge-lime">رِحلة</span>
-          <span>rehlaa.org</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </a>
-
         <button class="mobile-menu-btn" id="mobileMenuToggle" aria-label="فتح القائمة">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
         </button>
@@ -261,6 +263,13 @@
 
       <!-- Right Utility Controls -->
       <div class="player-right-tools">
+        <!-- Modern Dynamic Photo Slideshow / Visual Theater Button -->
+        <button class="btn-secondary btn-player-slideshow" id="playerPhotoSlideBtn" title="عرض الصور الميدانية التفاعلية متزامنة مع النشيد" aria-label="المسرح البصري">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+          <span class="btn-text">عرض الصور</span>
+          <span class="theater-live-dot" title="التزامن البصري متوفر"></span>
+        </button>
+
         <button class="btn-secondary" id="playerLyricsBtn" style="padding: 6px 14px; font-size: 0.85rem;" title="عرض كلمات النشيد للمساعدة في الحفظ">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
           <span>الكلمات</span>
@@ -275,16 +284,158 @@
           <span>حفظ</span>
         </a>
 
-        <div class="volume-wrapper">
+        <!-- Enhanced, Crystal Clear Volume Control with Progress Fill & Visible Degree Badge -->
+        <div class="volume-wrapper" id="volumeControlWrapper">
           <button class="ctrl-btn" id="playerMuteBtn" title="كتم / تشغيل الصوت" aria-label="التحكم في الصوت">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
           </button>
-          <input type="range" class="volume-slider" id="playerVolumeSlider" min="0" max="100" value="85" aria-label="مستوى الصوت" />
+          <div class="volume-track-container" id="volumeTrackContainer" title="مستوى الصوت">
+            <input type="range" class="volume-slider" id="playerVolumeSlider" min="0" max="100" value="85" aria-label="مستوى الصوت" />
+            <div class="volume-fill-bar" id="playerVolumeFill" style="width: 85%;"></div>
+          </div>
+          <span class="volume-level-badge" id="playerVolumeLevelText">85%</span>
         </div>
       </div>
 
     </div>
   </aside>
+
+  <!-- Modern Dynamic Visual Theater Modal (المسرح البصري التفاعلي المتزامن مع النشيد) -->
+  <div class="photo-theater-modal" id="photoTheaterModal" role="dialog" aria-modal="true" aria-label="المسرح البصري المتزامن">
+    <!-- Ambient Dynamic Blurred Aura -->
+    <div class="theater-ambient-backdrop" id="theaterAmbientBackdrop"></div>
+    
+    <div class="photo-theater-container">
+      
+      <!-- Top Navigation & Info Header -->
+      <div class="photo-theater-header">
+        <div class="photo-theater-meta">
+          <span class="badge badge-emerald" id="theaterLiveBadge">
+            <span class="badge-pulse-dot"></span>
+            المسرح البصري الحي
+          </span>
+          <span class="theater-track-indicator" id="theaterTrackIndicator">النشيد: عناق الجذور</span>
+          <span class="badge badge-sand" id="theaterCounter">1 / 33</span>
+        </div>
+
+        <div class="photo-theater-actions">
+          <!-- Toggle Floating Synced Lyrics -->
+          <button class="btn-theater-action" id="theaterToggleLyricsBtn" title="عرض / إخفاء كلمات النشيد مع الصور">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            <span id="theaterLyricsBtnText">الكلمات</span>
+          </button>
+
+          <!-- Toggle Auto Slideshow Timer -->
+          <button class="btn-theater-action" id="theaterToggleTimerBtn" title="إيقاف / استئناف التبديل التلقائي للصور">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span id="theaterTimerStateText">تلقائي: 5ث</span>
+          </button>
+
+          <!-- Fullscreen Mode -->
+          <button class="btn-theater-action btn-icon-only" id="theaterFullscreenBtn" title="ملء الشاشة" aria-label="ملء الشاشة">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+          </button>
+
+          <!-- Close Modal -->
+          <button class="btn-theater-close" id="theaterCloseBtn" aria-label="إغلاق المسرح البصري (Escape)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Visual Stage (Center) -->
+      <div class="photo-theater-stage">
+        
+        <!-- Navigation Prev Button -->
+        <button class="theater-nav-btn prev" id="theaterPrevBtn" aria-label="الصورة السابقة">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <!-- Active Photo Frame -->
+        <div class="theater-image-wrapper" id="theaterImageWrapper">
+          <div class="theater-main-frame">
+            <img 
+              src="/media/gallery/609027914_122163142190821882_2704270206689015419_n.jpg" 
+              alt="ذاكرة صور الميدان" 
+              class="theater-main-img ken-burns" 
+              id="theaterMainImg" 
+            />
+            
+            <!-- Slide Auto-Advance Progress Line -->
+            <div class="theater-slide-progress-bar" id="theaterSlideProgressBar"></div>
+          </div>
+
+          <!-- Dynamic Caption Overlay Card -->
+          <div class="theater-caption-card" id="theaterCaptionCard">
+            <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:4px;">
+              <span class="badge badge-emerald" id="theaterCategoryBadge">غرس الأشجار والشتلات</span>
+            </div>
+            <h2 class="theater-photo-title" id="theaterTitle">توثيق ميداني — سواعد متطوعي غرسة ورِحلة</h2>
+            <p class="theater-photo-desc" id="theaterDesc">عرض بصري تتابعي سينمائي متزامن مع النشيد</p>
+          </div>
+
+          <!-- Floating Synced Lyrics Drawer (Collapsible) -->
+          <div class="theater-lyrics-overlay" id="theaterLyricsOverlay">
+            <div class="theater-lyrics-header">
+              <span class="badge badge-sand">كلمات النشيد للحفظ</span>
+              <button class="btn-icon" id="theaterCloseLyricsBtn" style="width:28px; height:28px;" aria-label="إغلاق الكلمات">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+            <div class="theater-lyrics-content" id="theaterLyricsContent">
+              <!-- Dynamically populated with stanzas of active track -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Navigation Next Button -->
+        <button class="theater-nav-btn next" id="theaterNextBtn" aria-label="الصورة التالية">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+
+      </div>
+
+      <!-- Bottom Filmstrip (Interactive 33 Photo Thumbnails) & HUD Audio Bar -->
+      <div class="theater-bottom-hud">
+        
+        <!-- Filmstrip Strip (Scrollable Thumbnails) -->
+        <div class="theater-thumbstrip-wrap" id="theaterThumbstripWrap">
+          <div class="theater-thumbstrip" id="theaterThumbstrip">
+            <!-- Dynamically populated with all 33 photos -->
+          </div>
+        </div>
+
+        <!-- Integrated Floating Playback Controls -->
+        <div class="theater-playback-row">
+          <div class="theater-track-summary">
+            <span class="theater-current-track-name" id="theaterCurrentTrackName">عناق الجذور</span>
+            <span class="theater-current-track-dur" id="theaterCurrentTrackDur">00:00 / 02:26</span>
+          </div>
+
+          <div class="theater-audio-controls">
+            <button class="theater-ctrl-btn" id="theaterPrevTrackBtn" title="النشيد السابق" aria-label="النشيد السابق">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+            </button>
+            <button class="theater-play-btn" id="theaterPlayBtn" title="تشغيل / إيقاف" aria-label="تشغيل">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+            <button class="theater-ctrl-btn" id="theaterNextTrackBtn" title="النشيد التالي" aria-label="النشيد التالي">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+            </button>
+          </div>
+
+          <div class="theater-seeker-container" id="theaterSeekerContainer" role="slider" aria-label="شريط تقدم النشيد">
+            <div class="theater-seeker-track" id="theaterSeekerTrack">
+              <div class="theater-seeker-fill" id="theaterSeekerFill"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
 
   <!-- Full-Screen Lightbox Modal for 33 Field Photos -->
   <div class="lightbox-modal" id="lightboxModal" role="dialog" aria-modal="true" aria-label="معاينة الصورة المكبرة">
