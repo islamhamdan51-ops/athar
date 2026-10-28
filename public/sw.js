@@ -3,7 +3,7 @@
  * تخزين مؤقت متقدم للأصول والخطوط والصور ودعم العمل دون اتصال بالإنترنت
  */
 
-const CACHE_NAME = 'athar-pwa-v1';
+const CACHE_NAME = 'athar-pwa-v2';
 
 // الأصول الأساسية لهيكل التطبيق (App Shell)
 const PRECACHE_ASSETS = [

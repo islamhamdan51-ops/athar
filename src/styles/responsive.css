@@ -93,7 +93,7 @@
   }
 
   body {
-    padding-bottom: calc(var(--player-height) + 24px);
+    padding-bottom: calc(var(--player-height) + 24px + env(safe-area-inset-bottom, 0px));
   }
 
   .container {
@@ -422,7 +422,17 @@
     flex-shrink: 0;
   }
 
-  .player-right-tools .volume-wrapper {
+  .player-right-tools .volume-wrapper,
+  .player-right-tools #playerSpeedBtn,
+  .player-right-tools #playerDownloadBtn {
+    display: none !important;
+  }
+
+  .btn-player-slideshow {
+    padding: 6px 10px;
+  }
+
+  .btn-player-slideshow .btn-text {
     display: none;
   }
 

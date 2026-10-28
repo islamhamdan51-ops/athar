@@ -28,10 +28,16 @@ export class AtharAudioPlayer {
     this.volume = 0.85;
     this.onTrackChange = onTrackChange || (() => {});
 
-    // Create native audio element
-    this.audio = new Audio();
-    this.audio.preload = 'metadata';
+    // Connect to real DOM audio element for high-priority mobile background playback
+    const domAudio = document.getElementById('globalAtharAudio');
+    this.audio = domAudio || new Audio();
+    this.audio.preload = 'auto';
+    this.audio.playsInline = true;
+    this.audio.setAttribute('playsinline', '');
+    this.audio.setAttribute('webkit-playsinline', '');
     this.audio.volume = this.volume;
+    this.wakeLock = null;
+    this._lastPositionUpdate = 0;
 
     this.initAudioEvents();
     this.initPhotoTheaterDOM();
@@ -46,6 +52,7 @@ export class AtharAudioPlayer {
       this.isPlaying = true;
       this.updateUI();
       this.updateMediaSession();
+      this.requestWakeLock();
       if (this.isPhotoSlideshowRunning) {
         this.startPhotoSlideshow();
       }
@@ -54,11 +61,29 @@ export class AtharAudioPlayer {
     this.audio.addEventListener('pause', () => {
       this.isPlaying = false;
       this.updateUI();
+      this.releaseWakeLock();
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.playbackState = 'paused';
+      }
       this.stopPhotoSlideshow();
     });
 
     this.audio.addEventListener('timeupdate', () => {
       this.updateProgress();
+      if (this.isPlaying && (!this._lastPositionUpdate || Date.now() - this._lastPositionUpdate > 1000)) {
+        this._lastPositionUpdate = Date.now();
+        this.syncPositionState();
+      }
+    });
+
+    // Ensure uninterrupted playback and media session renewal when screen locks or tab changes
+    document.addEventListener('visibilitychange', () => {
+      if (this.isPlaying) {
+        if (document.visibilityState === 'visible') {
+          this.requestWakeLock();
+        }
+        this.updateMediaSession();
+      }
     });
 
     this.audio.addEventListener('loadedmetadata', () => {
@@ -303,21 +328,96 @@ export class AtharAudioPlayer {
   }
 
   updateMediaSession() {
-    if ('mediaSession' in navigator) {
-      const track = this.currentTrack;
-      navigator.mediaSession.metadata = new MediaMetadata({
-        title: track.title,
-        artist: 'مشروع غرسة & منظمة رِحلة',
-        album: 'ألبوم غرسة الإنشادي',
-        artwork: [
-          { src: '/media/brand/gharsa-album-cover.jpg', sizes: '512x512', type: 'image/jpeg' }
-        ]
-      });
+    if (!('mediaSession' in navigator)) return;
 
-      navigator.mediaSession.setActionHandler('play', () => this.audio.play());
-      navigator.mediaSession.setActionHandler('pause', () => this.audio.pause());
+    const track = this.currentTrack;
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: track.title,
+      artist: 'مشروع غرسة & منظمة رِحلة',
+      album: 'ألبوم غرسة الإنشادي — 27,000 شجرة',
+      artwork: [
+        { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+        { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+        { src: '/icons/icon-maskable-512.png', sizes: '512x512', type: 'image/png' },
+        { src: '/media/brand/gharsa-album-cover.jpg', sizes: '1024x571', type: 'image/jpeg' }
+      ]
+    });
+
+    navigator.mediaSession.playbackState = this.isPlaying ? 'playing' : 'paused';
+    this.syncPositionState();
+
+    try {
+      navigator.mediaSession.setActionHandler('play', () => this.togglePlay());
+      navigator.mediaSession.setActionHandler('pause', () => this.togglePlay());
       navigator.mediaSession.setActionHandler('previoustrack', () => this.prev());
       navigator.mediaSession.setActionHandler('nexttrack', () => this.next());
+      
+      navigator.mediaSession.setActionHandler('seekto', (details) => {
+        if (details.fastSeek && 'fastSeek' in this.audio) {
+          this.audio.fastSeek(details.seekTime);
+        } else {
+          this.audio.currentTime = details.seekTime;
+        }
+        this.updateProgress();
+        this.syncPositionState();
+      });
+
+      navigator.mediaSession.setActionHandler('seekbackward', (details) => {
+        const skip = details.seekOffset || 10;
+        this.audio.currentTime = Math.max(0, this.audio.currentTime - skip);
+        this.updateProgress();
+        this.syncPositionState();
+      });
+
+      navigator.mediaSession.setActionHandler('seekforward', (details) => {
+        const skip = details.seekOffset || 10;
+        this.audio.currentTime = Math.min(this.audio.duration || 0, this.audio.currentTime + skip);
+        this.updateProgress();
+        this.syncPositionState();
+      });
+
+      navigator.mediaSession.setActionHandler('stop', () => {
+        this.audio.pause();
+        this.audio.currentTime = 0;
+        if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'none';
+      });
+    } catch (e) {
+      console.warn('MediaSession handler warning:', e);
+    }
+  }
+
+  syncPositionState() {
+    if ('mediaSession' in navigator && 'setPositionState' in navigator.mediaSession) {
+      const dur = this.audio.duration || this.currentTrack.durationSeconds || 0;
+      if (!isNaN(dur) && dur > 0) {
+        try {
+          navigator.mediaSession.setPositionState({
+            duration: dur,
+            playbackRate: this.audio.playbackRate || 1.0,
+            position: Math.min(this.audio.currentTime || 0, dur)
+          });
+        } catch (err) {}
+      }
+    }
+  }
+
+  async requestWakeLock() {
+    if ('wakeLock' in navigator && !this.wakeLock) {
+      try {
+        this.wakeLock = await navigator.wakeLock.request('screen');
+        this.wakeLock.addEventListener('release', () => {
+          this.wakeLock = null;
+        });
+      } catch (e) {}
+    }
+  }
+
+  releaseWakeLock() {
+    if (this.wakeLock) {
+      try {
+        this.wakeLock.release();
+      } catch (e) {}
+      this.wakeLock = null;
     }
   }
 

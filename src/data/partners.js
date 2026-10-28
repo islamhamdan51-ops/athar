@@ -29,7 +29,7 @@ export const PARTNERS_INFO = {
     name: 'مشروع غرسة الوطني للتشجير',
     englishName: 'Gharsa National Afforestation Initiative',
     tagline: 'المبادرة الوطنية للتشجير ومكافحة التصحر في دولة ليبيا 🇱🇾',
-    logo: '/media/brand/gharsa-logo.svg',
+    logo: '/media/brand/gharsa-album-cover.jpg',
     url: 'https://gharsa.ly',
     target: '27,000 شجرة بحلول عام 2027 عبر المدارس والبلديات',
     system: 'نظام تتبع ذكي مدعوم برمز QR لمتابعة نمو كل شجرة والأثر المناخي المستدام',

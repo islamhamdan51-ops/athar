@@ -430,7 +430,7 @@ class AtharApp {
               <span class="stat-label">أناشيد رسمية واستوديو (ألبوم غرسة)</span>
             </div>
             <div class="stat-item">
-              <span class="stat-num">33</span>
+              <span class="stat-num">${this.galleryItems.length}</span>
               <span class="stat-label">صورة ميدانية موثقة للمتطوعين</span>
             </div>
             <div class="stat-item">

@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>أَثَر | ATHAR — المنصة الرقمية للأناشيد والذاكرة البصرية</title>
   
   <!-- SEO & Meta Tags -->
@@ -205,6 +205,9 @@
 
   <!-- Persistent Bottom Audio Player -->
   <aside class="bottom-player" role="region" aria-label="مشغل الصوت المستمر">
+    <!-- Real DOM Attached Audio for Uninterrupted Mobile Background Playback -->
+    <audio id="globalAtharAudio" preload="auto" playsinline webkit-playsinline x-webkit-airplay="allow" style="display:none;"></audio>
+
     <!-- Clickable Top Thin Seeker -->
     <div class="player-top-progress-container" id="playerTopProgressContainer" role="slider" aria-label="شريط تقدم النشيد" tabindex="0">
       <div class="player-top-progress-bar" id="playerTopProgressBar">
@@ -315,7 +318,7 @@
             المسرح البصري الحي
           </span>
           <span class="theater-track-indicator" id="theaterTrackIndicator">النشيد: عناق الجذور</span>
-          <span class="badge badge-sand" id="theaterCounter">1 / 33</span>
+          <span class="badge badge-sand" id="theaterCounter">1 / 104</span>
         </div>
 
         <div class="photo-theater-actions">
@@ -437,10 +440,10 @@
     </div>
   </div>
 
-  <!-- Full-Screen Lightbox Modal for 33 Field Photos -->
+  <!-- Full-Screen Lightbox Modal for 104 Field Photos -->
   <div class="lightbox-modal" id="lightboxModal" role="dialog" aria-modal="true" aria-label="معاينة الصورة المكبرة">
     <div class="lightbox-header">
-      <span class="lightbox-counter" id="lightboxCounter">1 / 33</span>
+      <span class="lightbox-counter" id="lightboxCounter">1 / 104</span>
       <button class="lightbox-close-btn" id="lightboxCloseBtn" aria-label="إغلاق العرض المكبر (Escape)">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
